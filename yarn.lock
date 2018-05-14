@@ -5536,6 +5536,10 @@ react-native-gesture-handler@1.0.0-alpha.41:
     invariant "^2.2.2"
     prop-types "^15.5.10"
 
+react-native-hamburger@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/react-native-hamburger/-/react-native-hamburger-0.0.2.tgz#c1ebcb8cb091287e1dcfc1364a97f3b73d20a9b5"
+
 "react-native-maps@https://github.com/expo/react-native-maps/archive/0.20.1-exp.0.tar.gz":
   version "0.20.1"
   resolved "https://github.com/expo/react-native-maps/archive/0.20.1-exp.0.tar.gz#81d607e2d77481c0441aecfdbc303389a34084c0"
@@ -5553,6 +5557,12 @@ react-native-material-design@^0.3.7:
   dependencies:
     react-native-material-design-styles "git+https://github.com/react-native-material-design/react-native-material-design-styles.git"
     react-native-vector-icons "^2.0.1"
+
+react-native-navbar@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/react-native-navbar/-/react-native-navbar-2.1.0.tgz#4f21e947501ce5cf4563a29914cb3192db35a647"
+  dependencies:
+    prop-types "^15.5.10"
 
 react-native-safe-module@^1.1.0:
   version "1.2.0"
