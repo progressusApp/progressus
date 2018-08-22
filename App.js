@@ -1,84 +1,92 @@
 import React from 'react';
-import { StyleSheet, Text, View, StatusBar, Image, TouchableOpacity } from 'react-native';
-import SideMenu from 'react-native-side-menu';
+import { Button, ScrollView, StatusBar, Text, View } from 'react-native';
+import { createStackNavigator, SafeAreaView } from 'react-navigation';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { createDrawerNavigator } from 'react-navigation-drawer';
+import { KeepAwake } from 'expo';
 
-import Sidemenu from './Sidemenu';
-import MainView from './MainView';
-import Hamburger from 'react-native-hamburger';
-import NavigationBar from 'react-native-navbar';
+const SampleText = ({ children }) => <Text>{children}</Text>;
 
-class ContentView extends React.Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>Welcome to React Dupa Native!</Text>
-        <Text style={styles.instructions}>To get started, edit index.ios.js</Text>
-        <Text style={styles.instructions}>
-          Press Cmd+R to reload,{'\n'}
-          Cmd+Control+Z for dev menu
-        </Text>
+const MyNavScreen = ({ navigation, banner }) => (
+  <ScrollView>
+    <SafeAreaView forceInset={{ top: 'always' }}>
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <SampleText>{banner}</SampleText>
       </View>
-    );
-  }
-}
-
-export default class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { isSidemenuOpen: false };
-  }
-
-  toggleSidemenuState = () => {
-    this.setState({
-      ...this.state,
-      isSidemenuOpen: !this.state.isSidemenuOpen,
-    });
-  };
-
-  render() {
-    const menu = (
-      <Sidemenu
-        closeIcon={
-          <TouchableOpacity onPress={this.toggleSidemenuState} activeOpacity={0.5}>
-            <Image source={require('./assets/icons/close.png')} />
-          </TouchableOpacity>
-        }
+      <Button onPress={() => navigation.openDrawer()} title="Open drawer" />
+      <Button onPress={() => navigation.toggleDrawer()} title="Toggle drawer" />
+      <Button
+        onPress={() => {
+          navigation.openDrawer();
+          setTimeout(() => {
+            navigation.closeDrawer();
+          }, 500);
+        }}
+        title="Open then close drawer shortly after"
       />
-    );
+      <Button onPress={() => navigation.navigate('Email')} title="Open other screen" />
+      <Button onPress={() => navigation.goBack(null)} title="Go back" />
+      <Button onPress={() => navigation.navigate('Home')} title="Go back to list" />
+    </SafeAreaView>
+    <StatusBar barStyle="default" />
+    <KeepAwake />
+  </ScrollView>
+);
 
-    return (
-      <View style={styles.container}>
-        {/* <StatusBar barStyle="dark-content" hidden={false} /> */}
-        {/* <StatusBar barStyle="dark-content" hidden={false} /> */}
-        <SideMenu menu={menu} isOpen={this.state.isSidemenuOpen}>
-          <StatusBar backgroundColor="blue" barStyle="light-content" />
-          {/* <NavigationBar
-            title="dupa :)"
-            rightButton={<Image source={require('./assets/icons/close.png')} />}
-            containerStyle={styles.navbar}
-          /> */}
-          <MainView>
-            {/* <Hamburger active={this.state.isSidemenuOpen} onPress={this.toggleSidemenuState} /> */}
-            <TouchableOpacity onPress={this.toggleSidemenuState} activeOpacity={0.5}>
-              <Image source={require('./assets/icons/menu.png')} />
-            </TouchableOpacity>
-          </MainView>
-          <Text>dupa {String(this.state.isSidemenuOpen)}</Text>
-        </SideMenu>
-      </View>
-    );
-  }
-}
+const InboxScreen = ({ navigation }) => <MyNavScreen banner={'Inbox Screen'} navigation={navigation} />;
+InboxScreen.navigationOptions = {
+  headerTitle: 'Inbox',
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  navbar: {
-    backgroundColor: 'red',
-    flex: 1,
-  },
+const EmailScreen = ({ navigation }) => <MyNavScreen banner={'Email Screen'} navigation={navigation} />;
+
+const DraftsScreen = ({ navigation }) => <MyNavScreen banner={'Drafts Screen'} navigation={navigation} />;
+DraftsScreen.navigationOptions = {
+  headerTitle: 'Drafts',
+};
+
+const InboxStack = createStackNavigator({
+  Inbox: { screen: InboxScreen },
+  Email: { screen: EmailScreen },
 });
+
+InboxStack.navigationOptions = {
+  drawerLabel: 'Inbox',
+  drawerIcon: ({ tintColor }) => <MaterialIcons name="move-to-inbox" size={24} style={{ color: tintColor }} />,
+};
+
+const DraftsStack = createStackNavigator({
+  Drafts: { screen: DraftsScreen },
+  Email: { screen: EmailScreen },
+});
+
+DraftsStack.navigationOptions = {
+  drawerLabel: 'Drafts',
+  drawerIcon: ({ tintColor }) => <MaterialIcons name="drafts" size={24} style={{ color: tintColor }} />,
+};
+
+const DrawerExample = createDrawerNavigator(
+  {
+    Inbox: {
+      path: '/',
+      screen: InboxStack,
+    },
+    Drafts: {
+      path: '/sent',
+      screen: DraftsStack,
+    },
+  },
+  {
+    initialRouteName: 'Drafts',
+    drawerWidth: 210,
+    contentOptions: {
+      activeTintColor: '#e91e63',
+    },
+  }
+);
+
+DrawerExample.navigationOptions = {
+  header: null,
+};
+
+export default DrawerExample;

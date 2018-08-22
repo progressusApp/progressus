@@ -1,12 +1,17 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 // import SideMenu from 'react-native-side-menu';
+const util = require('util');
 
-export default class MainView extends React.Component {
+export default class SecondScreen extends React.Component {
+  static navigationOptions = {
+    title: 'Second screen',
+  };
+
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>Welcome to React Dupa Native!</Text>
+        <Text style={styles.welcome}>DUPA!</Text>
         <Text style={styles.instructions}>To get started, edit index.ios.js</Text>
         <Text style={styles.instructions}>
           Press Cmd+R to reload,{'\n'}

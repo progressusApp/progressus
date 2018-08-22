@@ -1,17 +1,24 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Button } from 'react-native';
 // import SideMenu from 'react-native-side-menu';
+const util = require('util');
 
-export default class MainView extends React.Component {
+export default class ToDoList extends React.Component {
+  // static navigationOptions = {
+  //   title: 'First screen',
+  // };
+
   render() {
+    const { navigate } = this.props.navigation;
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>Welcome to React Dupa Native!</Text>
+        <Text style={styles.welcome}>TODOLIST!</Text>
         <Text style={styles.instructions}>To get started, edit index.ios.js</Text>
         <Text style={styles.instructions}>
           Press Cmd+R to reload,{'\n'}
           Cmd+Control+Z for dev menu
         </Text>
+        <Button onPress={() => navigate('Second')} title="Dupa:)" />
       </View>
     );
   }
