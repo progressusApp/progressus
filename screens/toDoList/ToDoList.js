@@ -5,96 +5,16 @@ import Icon from 'react-native-vector-icons/Feather';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { CheckBox } from 'react-native-elements';
 import NewTaskView from './NewTask';
-
-// const ToDoListScreen = ({ navigation }) => (
-//   <View style={styles.container}>
-//     <Text>Dzień dobry, tu będzie to do lista</Text>
-//     <FlatList
-//       ref={this.setRef}
-//       style={{ padding: 10, flex: 1 }}
-//       data={this.getItems()}
-//       renderItem={this.renderItem}
-//       keyExtractor={this.keyExtractor}
-//     />
-//   </View>
-// );
+import { connect } from 'react-redux';
+import { addTask, updateTaskCheck } from '../../reducer';
 
 class ToDoListScreen extends React.Component {
-  state = {
-    tasks: [
-      {
-        id: 1,
-        content: 'content',
-        date: 'date',
-        done: false,
-      },
-      {
-        id: 2,
-        content: 'content 2',
-        date: 'date 2',
-        done: true,
-      },
-      {
-        id: 3,
-        content: 'content 2',
-        date: 'date 2',
-        done: true,
-      },
-      {
-        id: 4,
-        content: 'content 2',
-        date: 'date 2',
-        done: true,
-      },
-      {
-        id: 5,
-        content: 'content 2',
-        date: 'date 2',
-        done: true,
-      },
-      {
-        id: 6,
-        content: 'content 2',
-        date: 'date 2',
-        done: true,
-      },
-      {
-        id: 7,
-        content: 'content 2',
-        date: 'date 2',
-        done: true,
-      },
-      {
-        id: 8,
-        content: 'content 2',
-        date: 'date 2',
-        done: true,
-      },
-      {
-        id: 9,
-        content: 'content 2',
-        date: 'date 2',
-        done: true,
-      },
-      {
-        id: 11,
-        content: 'content 2',
-        date: 'date 2',
-        done: true,
-      },
-    ],
-  };
-
   updateTaskState = taskID => {
-    this.setState({
-      tasks: this.state.tasks.map(task => (task.id === taskID ? { ...task, done: !task.done } : task)),
-    });
+    this.props.updateTaskCheck(taskID);
   };
 
   renderItem = ({ item }) => {
     return (
-      // <View style={styles.task}>
-      // <Text>{item.done.toString()}</Text>
       <CheckBox
         checked={item.done}
         onPress={() => this.updateTaskState(item.id)}
@@ -106,15 +26,10 @@ class ToDoListScreen extends React.Component {
           </View>
         }
       />
-      // {/* <CheckBox value={item.done} onChange={() => this.updateTaskState(item.key)} /> */}
-      // {/* <CheckBox label="Label" checked={true} onChange={checked => console.log('I am checked', checked)} /> */}
-      // <Text style={styles.taskContent}>{item.content}</Text>
-      // <Text>{item.date}</Text>
-      // </View>
     );
   };
 
-  keyExtractor = item => item.id.toString();
+  keyExtractor = (item, index) => index.toString();
   setRef = el => (this.list = el);
 
   render() {
@@ -124,7 +39,7 @@ class ToDoListScreen extends React.Component {
           <FlatList
             ref={this.setRef}
             style={{ padding: 10, flex: 1 }}
-            data={this.state.tasks}
+            data={this.props.tasks}
             renderItem={this.renderItem}
             keyExtractor={this.keyExtractor}
           />
@@ -137,9 +52,18 @@ class ToDoListScreen extends React.Component {
   }
 }
 
+const mapStateToProps = state => ({
+  tasks: state.toDoTasks,
+});
+
+const mapDispatchToProps = {
+  addTask,
+  updateTaskCheck,
+};
+
 const ToDoListStack = createStackNavigator({
   MainView: {
-    screen: ToDoListScreen,
+    screen: connect(mapStateToProps, mapDispatchToProps)(ToDoListScreen),
     navigationOptions: ({ navigation }) => ({
       title: 'Lista "to do"',
       headerLeft: (
@@ -148,7 +72,7 @@ const ToDoListStack = createStackNavigator({
     }),
   },
   NewTaskView: {
-    screen: NewTaskView,
+    screen: connect(mapStateToProps, mapDispatchToProps)(NewTaskView),
     navigationOptions: ({ navigation }) => ({
       title: 'Nowe zadanie',
       headerLeft: (
@@ -159,6 +83,14 @@ const ToDoListStack = createStackNavigator({
           onPress={() => navigation.navigate('MainView')}
         />
       ),
+      // headerRight: (
+      //   <MaterialIcons
+      //     name="check"
+      //     size={30}
+      //     style={{ marginRight: 15 }}
+      //     onPress={data => navigation.navigate('MainView')}
+      //   />
+      // ),
     }),
   },
 });
@@ -184,7 +116,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
   },
   taskContent: {
-    fontSize: 20,
+    fontSize: 16,
     fontWeight: 'bold',
   },
   taskLabel: {

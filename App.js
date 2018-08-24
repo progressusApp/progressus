@@ -4,106 +4,31 @@ import { createStackNavigator, SafeAreaView } from 'react-navigation';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { createDrawerNavigator } from 'react-navigation-drawer';
 import { KeepAwake } from 'expo';
-import Dupa from './screens/Dupa';
 import MainViewStack from './MainView';
 import ToDoListStack from './screens/toDoList/ToDoList';
+import { createStore, applyMiddleware } from 'redux';
+import { Provider, connect } from 'react-redux';
+import reducer from './reducer';
 
-const SampleText = ({ children }) => <Text>{children}</Text>;
+const store = createStore(reducer);
 
-const MyNavScreen = ({ navigation, banner }) => (
-  <ScrollView>
-    <SafeAreaView forceInset={{ top: 'always' }}>
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <SampleText>{banner}</SampleText>
-      </View>
-      <Button onPress={() => navigation.openDrawer()} title="Open drawer" />
-      <Button onPress={() => navigation.toggleDrawer()} title="Toggle drawer" />
-      <Button
-        onPress={() => {
-          navigation.openDrawer();
-          setTimeout(() => {
-            navigation.closeDrawer();
-          }, 500);
-        }}
-        title="Open then close drawer shortly after"
-      />
-      <Button onPress={() => navigation.navigate('Email')} title="Open other screen" />
-      <Button onPress={() => navigation.goBack(null)} title="Go back" />
-      <Button onPress={() => navigation.navigate('Home')} title="Go back to list" />
-    </SafeAreaView>
-    <StatusBar barStyle="default" />
-    <KeepAwake />
-  </ScrollView>
-);
-
-const InboxScreen = ({ navigation }) => <MyNavScreen banner={'Inbox Screen'} navigation={navigation} />;
-InboxScreen.navigationOptions = {
-  headerTitle: 'Inbox',
-};
-
-const EmailScreen = ({ navigation }) => <MyNavScreen banner={'Email Screen'} navigation={navigation} />;
-
-const DraftsScreen = ({ navigation }) => <MyNavScreen banner={'Drafts Screen'} navigation={navigation} />;
-DraftsScreen.navigationOptions = {
-  headerTitle: 'Drafts',
-};
-
-const DupaScreen = ({ navigation }) => <MyNavScreen banner={'Dupa Screen'} navigation={navigation} />;
-DupaScreen.navigationOptions = {
-  headerTitle: 'Dupa',
-  headerLeft: <MaterialIcons name="menu" size={30} style={{ marginLeft: 15 }} />,
-};
-
-const InboxStack = createStackNavigator({
-  Inbox: { screen: InboxScreen },
-  Email: { screen: EmailScreen },
-});
-
-InboxStack.navigationOptions = {
-  drawerLabel: 'Inbox',
-  drawerIcon: ({ tintColor }) => <MaterialIcons name="move-to-inbox" size={24} style={{ color: tintColor }} />,
-};
-
-const DraftsStack = createStackNavigator({
-  Drafts: { screen: DraftsScreen },
-  Email: { screen: EmailScreen },
-});
-
-const DupaStack = createStackNavigator({
-  Dupa: {
-    screen: DupaScreen,
-    navigationOptions: ({ navigation }) => ({
-      title: 'Dupa', // Title to appear in status bar
-      headerLeft: (
-        <MaterialIcons name="menu" size={30} style={{ marginLeft: 15 }} onPress={() => navigation.openDrawer()} />
-      ),
-    }),
-  },
-});
-
-DupaStack.navigationOptions = {
-  drawerLabel: 'Dupa!',
-  drawerIcon: ({ tintColor }) => <MaterialIcons name="move-to-inbox" size={24} style={{ color: tintColor }} />,
-};
-
-DraftsStack.navigationOptions = {
-  drawerLabel: 'Drafts',
-  drawerIcon: ({ tintColor }) => <MaterialIcons name="drafts" size={24} style={{ color: tintColor }} />,
-};
 console.disableYellowBox = true;
+
+export default class App extends React.Component {
+  render() {
+    return (
+      <Provider store={store}>
+        <DrawerExample />
+      </Provider>
+    );
+  }
+}
+
 const DrawerExample = createDrawerNavigator(
   {
     Home: {
       path: '/main',
       screen: MainViewStack,
-    },
-    Inbox: {
-      path: '/',
-      screen: InboxStack,
-    },
-    Drafts: {
-      path: '/sent',
-      screen: DraftsStack,
     },
     ToDoList: {
       path: '/todo',
@@ -122,5 +47,3 @@ const DrawerExample = createDrawerNavigator(
 DrawerExample.navigationOptions = {
   header: null,
 };
-
-export default DrawerExample;
