@@ -4,6 +4,9 @@ import { createStackNavigator, SafeAreaView } from 'react-navigation';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { createDrawerNavigator } from 'react-navigation-drawer';
 import { KeepAwake } from 'expo';
+import Dupa from './screens/Dupa';
+import MainViewStack from './MainView';
+import ToDoListStack from './screens/toDoList/ToDoList';
 
 const SampleText = ({ children }) => <Text>{children}</Text>;
 
@@ -45,6 +48,12 @@ DraftsScreen.navigationOptions = {
   headerTitle: 'Drafts',
 };
 
+const DupaScreen = ({ navigation }) => <MyNavScreen banner={'Dupa Screen'} navigation={navigation} />;
+DupaScreen.navigationOptions = {
+  headerTitle: 'Dupa',
+  headerLeft: <MaterialIcons name="menu" size={30} style={{ marginLeft: 15 }} />,
+};
+
 const InboxStack = createStackNavigator({
   Inbox: { screen: InboxScreen },
   Email: { screen: EmailScreen },
@@ -60,13 +69,34 @@ const DraftsStack = createStackNavigator({
   Email: { screen: EmailScreen },
 });
 
+const DupaStack = createStackNavigator({
+  Dupa: {
+    screen: DupaScreen,
+    navigationOptions: ({ navigation }) => ({
+      title: 'Dupa', // Title to appear in status bar
+      headerLeft: (
+        <MaterialIcons name="menu" size={30} style={{ marginLeft: 15 }} onPress={() => navigation.openDrawer()} />
+      ),
+    }),
+  },
+});
+
+DupaStack.navigationOptions = {
+  drawerLabel: 'Dupa!',
+  drawerIcon: ({ tintColor }) => <MaterialIcons name="move-to-inbox" size={24} style={{ color: tintColor }} />,
+};
+
 DraftsStack.navigationOptions = {
   drawerLabel: 'Drafts',
   drawerIcon: ({ tintColor }) => <MaterialIcons name="drafts" size={24} style={{ color: tintColor }} />,
 };
-
+console.disableYellowBox = true;
 const DrawerExample = createDrawerNavigator(
   {
+    Home: {
+      path: '/main',
+      screen: MainViewStack,
+    },
     Inbox: {
       path: '/',
       screen: InboxStack,
@@ -75,9 +105,13 @@ const DrawerExample = createDrawerNavigator(
       path: '/sent',
       screen: DraftsStack,
     },
+    ToDoList: {
+      path: '/todo',
+      screen: ToDoListStack,
+    },
   },
   {
-    initialRouteName: 'Drafts',
+    initialRouteName: 'Home',
     drawerWidth: 210,
     contentOptions: {
       activeTintColor: '#e91e63',
