@@ -1,5 +1,7 @@
 export const ADD_TASK = 'toDoList/newTask';
 export const UPDATE_TASK_CHECK = 'toDoList/updateTaskCheck';
+export const ADD_CATEGORY = 'skills/addCategory';
+export const ADD_SKILL = 'skills/addSkill';
 
 const initialState = {
   toDoTasks: [
@@ -22,6 +24,23 @@ const initialState = {
       done: false,
     },
   ],
+  skillsCategories: [
+    {
+      id: 0,
+      title: 'Sport',
+      skills: ['Bieganie', 'Pływanie'],
+    },
+    {
+      id: 1,
+      title: 'Języki programownia',
+      skills: ['Ruby', 'JavaScript'],
+    },
+    {
+      id: 2,
+      title: 'Języki obce',
+      skills: ['Angielski', 'Hiszpański'],
+    },
+  ],
 };
 
 export default function reducer(state = initialState, action) {
@@ -33,6 +52,21 @@ export default function reducer(state = initialState, action) {
         ...state,
         toDoTasks: state.toDoTasks.map(
           task => (task.id === action.payload.taskID ? { ...task, done: !task.done } : task)
+        ),
+      };
+    case ADD_CATEGORY:
+      return {
+        ...state,
+        skillsCategories: [...state.skillsCategories, { title: action.payload.title, skills: [] }],
+      };
+    case ADD_SKILL:
+      return {
+        ...state,
+        skillsCategories: state.skillsCategories.map(
+          category =>
+            category.id === action.payload.categoryID
+              ? { ...category, skills: [...category.skills, action.payload.skillName] }
+              : category
         ),
       };
     default:
@@ -54,6 +88,28 @@ export function updateTaskCheck(taskID) {
     type: UPDATE_TASK_CHECK,
     payload: {
       taskID,
+    },
+  };
+}
+
+export function addCategory(title) {
+  return {
+    type: ADD_CATEGORY,
+    payload: {
+      title,
+    },
+  };
+}
+
+export function addSkill(skillName, categoryID) {
+  console.log('add skill');
+  console.log('add skill ', skillName);
+  console.log('add skill ', categoryID);
+  return {
+    type: ADD_SKILL,
+    payload: {
+      skillName,
+      categoryID,
     },
   };
 }

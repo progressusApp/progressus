@@ -4,11 +4,13 @@ import { createStackNavigator, SafeAreaView } from 'react-navigation';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { createDrawerNavigator } from 'react-navigation-drawer';
 import { KeepAwake } from 'expo';
-import MainViewStack from './MainView';
-import ToDoListStack from './screens/toDoList/ToDoList';
 import { createStore, applyMiddleware } from 'redux';
 import { Provider, connect } from 'react-redux';
 import reducer from './reducer';
+
+import MainViewStack from './MainView';
+import ToDoListStack from './screens/toDoList/ToDoList';
+import SkillsStack from './screens/Skills';
 
 const store = createStore(reducer);
 
@@ -33,6 +35,10 @@ const DrawerExample = createDrawerNavigator(
     ToDoList: {
       path: '/todo',
       screen: ToDoListStack,
+    },
+    Skills: {
+      path: '/skills',
+      screen: SkillsStack,
     },
   },
   {
