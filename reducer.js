@@ -2,6 +2,8 @@ export const ADD_TASK = 'toDoList/newTask';
 export const UPDATE_TASK_CHECK = 'toDoList/updateTaskCheck';
 export const ADD_CATEGORY = 'skills/addCategory';
 export const ADD_SKILL = 'skills/addSkill';
+export const DELETE_SKILL = 'skills/deleteSkill';
+export const DELETE_CATEGORY = 'skills/deleteCategory';
 
 const initialState = {
   toDoTasks: [
@@ -69,6 +71,21 @@ export default function reducer(state = initialState, action) {
               : category
         ),
       };
+    case DELETE_SKILL:
+      return {
+        ...state,
+        skillsCategories: state.skillsCategories.map(
+          category =>
+            category.id === action.payload.categoryID
+              ? { ...category, skills: category.skills.filter((skill, index) => index !== action.payload.skillIndex) }
+              : category
+        ),
+      };
+    case DELETE_CATEGORY:
+      return {
+        ...state,
+        skillsCategories: state.skillsCategories.filter(category => category.id !== action.payload.categoryID),
+      };
     default:
       return state;
   }
@@ -101,15 +118,31 @@ export function addCategory(title) {
   };
 }
 
+export function deleteCategory(categoryID) {
+  return {
+    type: DELETE_CATEGORY,
+    payload: {
+      categoryID,
+    },
+  };
+}
+
 export function addSkill(skillName, categoryID) {
-  console.log('add skill');
-  console.log('add skill ', skillName);
-  console.log('add skill ', categoryID);
   return {
     type: ADD_SKILL,
     payload: {
       skillName,
       categoryID,
+    },
+  };
+}
+
+export function deleteSkill(categoryID, skillIndex) {
+  return {
+    type: DELETE_SKILL,
+    payload: {
+      categoryID,
+      skillIndex,
     },
   };
 }

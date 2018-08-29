@@ -11,12 +11,16 @@ import reducer from './reducer';
 import MainViewStack from './MainView';
 import ToDoListStack from './screens/toDoList/ToDoList';
 import SkillsStack from './screens/Skills';
+import TimerStack from './screens/Timer';
 
 const store = createStore(reducer);
 
 console.disableYellowBox = true;
 
 export default class App extends React.Component {
+  componentWillUnmount() {
+    console.log('app unmount');
+  }
   render() {
     return (
       <Provider store={store}>
@@ -39,6 +43,10 @@ const DrawerExample = createDrawerNavigator(
     Skills: {
       path: '/skills',
       screen: SkillsStack,
+    },
+    Timer: {
+      path: '/timer',
+      screen: TimerStack,
     },
   },
   {

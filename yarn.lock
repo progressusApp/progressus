@@ -5475,6 +5475,14 @@ react-lifecycles-compat@^3, react-lifecycles-compat@^3.0.4:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
 
+react-native-audio@^4.1.3:
+  version "4.1.3"
+  resolved "https://registry.yarnpkg.com/react-native-audio/-/react-native-audio-4.1.3.tgz#cab41703419f57c6d4de9c6bfd27f8fc54a4acaf"
+
+react-native-background-task@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/react-native-background-task/-/react-native-background-task-0.2.1.tgz#9d110ed14b245e0d8b9ec8114ce24b33ddda65de"
+
 react-native-branch@2.0.0-beta.3:
   version "2.0.0-beta.3"
   resolved "https://registry.yarnpkg.com/react-native-branch/-/react-native-branch-2.0.0-beta.3.tgz#2167af86bbc9f964bd45bd5f37684e5b54965e32"
@@ -5585,6 +5593,10 @@ react-native-scripts@1.13.1:
     qrcode-terminal "^0.11.0"
     rimraf "^2.6.1"
     xdl "48.1.4"
+
+react-native-stopwatch-timer@0.0.20:
+  version "0.0.20"
+  resolved "https://registry.yarnpkg.com/react-native-stopwatch-timer/-/react-native-stopwatch-timer-0.0.20.tgz#1badeb3b0d8d5ff02003d38d018c6a2b17fba00b"
 
 react-native-svg@6.2.2:
   version "6.2.2"

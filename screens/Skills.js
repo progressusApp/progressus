@@ -9,14 +9,14 @@ import {
   TouchableOpacity,
   Button,
   Dimensions,
+  KeyboardAvoidingView,
 } from 'react-native';
 import { createStackNavigator, SafeAreaView } from 'react-navigation';
 import Icon from 'react-native-vector-icons/Feather';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-// import { CheckBox } from 'react-native-elements';
-// import NewTaskView from './NewTask';
+import EntypoIcons from 'react-native-vector-icons/Entypo';
 import { connect } from 'react-redux';
-import { addCategory, addSkill } from '../reducer';
+import { addCategory, addSkill, deleteSkill, deleteCategory } from '../reducer';
 import Accordion from 'react-native-collapsible/Accordion';
 
 class SkillsScreen extends React.Component {
@@ -39,7 +39,12 @@ class SkillsScreen extends React.Component {
     return (
       <View style={styles.headerWrapper}>
         <Text style={styles.headerText}>{category.title}</Text>
-        <MaterialIcons name="keyboard-arrow-down" size={25} />
+        <View style={{ flexDirection: 'row' }}>
+          <MaterialIcons name="keyboard-arrow-down" size={25} />
+          <View style={styles.deleteButton}>
+            <Button onPress={() => this.props.deleteCategory(category.id)} title="Usuń" />
+          </View>
+        </View>
       </View>
     );
   };
@@ -52,9 +57,17 @@ class SkillsScreen extends React.Component {
     return (
       <View style={styles.contentWrapper}>
         {category.skills.map((item, index) => (
-          <Text key={index} style={styles.contentText}>
-            {item}
-          </Text>
+          <View style={styles.skillInputWrapper} key={index}>
+            <Text style={styles.contentText}>{item}</Text>
+            <EntypoIcons
+              name="cross"
+              size={20}
+              style={{ marginRight: 15, marginBottom: 10, color: '#e91e63' }}
+              onPress={() => {
+                this.props.deleteSkill(category.id, index);
+              }}
+            />
+          </View>
         ))}
         <View style={styles.skillInputWrapper}>
           <TextInput
@@ -84,7 +97,7 @@ class SkillsScreen extends React.Component {
     const { skillsCategories, addCategory } = this.props;
     const { newCategoryName } = this.state;
     return (
-      <View contentContainerStyle={styles.container}>
+      <KeyboardAvoidingView style={styles.container} behavior="position">
         <View style={styles.inputWrapper}>
           <TextInput
             style={styles.input}
@@ -104,16 +117,18 @@ class SkillsScreen extends React.Component {
           </View>
         </View>
         {console.log(this.props.skillsCategories)}
-        <Accordion
-          activeSection={this.state.activeSection}
-          sections={skillsCategories}
-          touchableComponent={TouchableOpacity}
-          renderHeader={this.renderHeader}
-          renderContent={this.renderContent}
-          duration={400}
-          onChange={this.setSection}
-        />
-      </View>
+        <ScrollView>
+          <Accordion
+            activeSection={this.state.activeSection}
+            sections={skillsCategories}
+            touchableComponent={TouchableOpacity}
+            renderHeader={this.renderHeader}
+            renderContent={this.renderContent}
+            duration={400}
+            onChange={this.setSection}
+          />
+        </ScrollView>
+      </KeyboardAvoidingView>
     );
   }
 }
@@ -125,6 +140,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
   addCategory,
   addSkill,
+  deleteSkill,
+  deleteCategory,
 };
 
 const SkillsStack = createStackNavigator({
@@ -183,6 +200,7 @@ const styles = StyleSheet.create({
     marginLeft: 30,
     marginRight: 30,
     marginBottom: 15,
+    marginTop: 15,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
@@ -196,5 +214,8 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     width: 200,
     padding: 10,
+  },
+  deleteButton: {
+    marginBottom: 10,
   },
 });
