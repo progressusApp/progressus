@@ -6,7 +6,7 @@ import { createDrawerNavigator } from 'react-navigation-drawer';
 import { KeepAwake } from 'expo';
 import { createStore, applyMiddleware } from 'redux';
 import { Provider, connect } from 'react-redux';
-import reducer from './reducer';
+import reducer from './store/reducer';
 
 import MainViewStack from './MainView';
 import ToDoListStack from './screens/toDoList/ToDoList';
@@ -18,9 +18,6 @@ const store = createStore(reducer);
 console.disableYellowBox = true;
 
 export default class App extends React.Component {
-  componentWillUnmount() {
-    console.log('app unmount');
-  }
   render() {
     return (
       <Provider store={store}>

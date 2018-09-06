@@ -16,7 +16,7 @@ import Icon from 'react-native-vector-icons/Feather';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import EntypoIcons from 'react-native-vector-icons/Entypo';
 import { connect } from 'react-redux';
-import { addCategory, addSkill, deleteSkill, deleteCategory } from '../reducer';
+import { addCategory, addSkill, deleteSkill, deleteCategory } from '../store/actions';
 import Accordion from 'react-native-collapsible/Accordion';
 
 class SkillsScreen extends React.Component {
@@ -25,10 +25,6 @@ class SkillsScreen extends React.Component {
     activeSection: false,
     newCategoryName: '',
     newSkillName: '',
-  };
-
-  toggleExpanded = () => {
-    this.setState({ collapsed: !this.state.collapsed });
   };
 
   setSection = section => {
@@ -116,7 +112,6 @@ class SkillsScreen extends React.Component {
             />
           </View>
         </View>
-        {console.log(this.props.skillsCategories)}
         <ScrollView>
           <Accordion
             activeSection={this.state.activeSection}

@@ -13,11 +13,19 @@ import {
   Picker,
   TouchableHighlight,
 } from 'react-native';
-import { createStackNavigator, SafeAreaView } from 'react-navigation';
+import {
+  createStackNavigator,
+  SafeAreaView,
+  createBottomTabNavigator,
+  createMaterialTopTabNavigator,
+} from 'react-navigation';
 import { connect } from 'react-redux';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import BackgroundTask from 'react-native-background-task';
 import { Stopwatch } from 'react-native-stopwatch-timer';
+import TimerList from './TimerList';
+import { addTimerRecord, deleteTimerRecord } from '../store/actions';
+import moment from 'moment';
 
 class TimerScreen extends React.Component {
   state = {
@@ -26,13 +34,21 @@ class TimerScreen extends React.Component {
     skillName: '',
 
     time: '00:00:00',
-    timerStart: false,
-    stopwatchStart: false,
     totalDuration: 90000,
-    timerReset: false,
+    stopwatchStart: false,
     stopwatchReset: false,
-    currentTime: '00:00:00',
+    isSaved: false,
+
+    startTime: '',
   };
+
+  componentDidMount() {
+    this.setState({
+      categoryName: this.props.skillsCategories[0].title,
+      categorySkills: this.props.skillsCategories[0].skills,
+      skillName: this.props.skillsCategories[0].skills[0],
+    });
+  }
 
   handlePickerChange = categoryName => {
     const { skillsCategories } = this.props;
@@ -45,24 +61,64 @@ class TimerScreen extends React.Component {
   }
 
   toggleStopwatch = () => {
-    this.setState({ stopwatchStart: !this.state.stopwatchStart, stopwatchReset: false });
+    this.setState({
+      stopwatchStart: !this.state.stopwatchStart,
+      stopwatchReset: false,
+      startTime: moment().format('HH:mm:ss'),
+    });
   };
 
   resetStopwatch = () => {
-    this.setState({ stopwatchStart: false, stopwatchReset: true });
+    this.setState({ stopwatchStart: false, stopwatchReset: true, isSaved: false, startTime: '' });
   };
 
   getFormattedTime = time => {
-    this.currentTime = time;
+    this.duration = time;
   };
 
-  componentDidMount() {
-    this.setState({
-      categoryName: this.props.skillsCategories[0].title,
-      categorySkills: this.props.skillsCategories[0].skills,
-      skillName: this.props.skillsCategories[0].skills[0],
-    });
-  }
+  saveTime = () => {
+    const { categoryName, skillName, startTime } = this.state;
+    if (!this.state.stopwatchStart) {
+      this.setState({ isSaved: true });
+    }
+
+    this.props.addTimerRecord(
+      categoryName,
+      skillName,
+      moment.duration(this.duration).asSeconds(),
+      startTime,
+      this.duration
+    );
+  };
+
+  renderSaveButton = () => {
+    if (this.state.isSaved) {
+      return (
+        <TouchableOpacity
+          style={{
+            flexDirection: 'row',
+            alignSelf: 'center',
+            marginTop: 40,
+          }}
+        >
+          <Text style={{ fontSize: 20, color: 'rgb(28, 184, 28)' }}>ZAPISANO</Text>
+        </TouchableOpacity>
+      );
+    } else {
+      return (
+        <TouchableOpacity
+          style={{
+            flexDirection: 'row',
+            alignSelf: 'center',
+            marginTop: 40,
+          }}
+          onPress={this.saveTime}
+        >
+          <Text style={{ fontSize: 20 }}>ZAPISZ</Text>
+        </TouchableOpacity>
+      );
+    }
+  };
 
   render() {
     return (
@@ -71,7 +127,7 @@ class TimerScreen extends React.Component {
           <Text style={styles.info}>Włącz timer aby rejestrować czas poświęcony na rozwój danej umiejętności</Text>
         </View>
         <Text style={styles.label}>Wybierz kategorię</Text>
-        {console.log(this.state)}
+        {/* {console.log('timer records ', this.props.timerRecords)} */}
         <Picker selectedValue={this.state.categoryName} onValueChange={itemValue => this.handlePickerChange(itemValue)}>
           {this.props.skillsCategories.map(category => (
             <Picker.Item label={category.title} value={category.title} key={category.id} />
@@ -90,13 +146,12 @@ class TimerScreen extends React.Component {
         {/* <Text>{this.state.time}</Text> */}
         <Stopwatch
           laps
-          msecs
           start={this.state.stopwatchStart}
           reset={this.state.stopwatchReset}
           options={options}
           getTime={this.getFormattedTime}
         />
-        {console.log('dupa :< ', this.currentTime)}
+        {/* {console.log('dupa :< ', this.currentTime)} */}
         <View style={styles.stopwatchButtonsWrapper}>
           <TouchableOpacity onPress={this.toggleStopwatch}>
             <Text style={{ fontSize: 20 }}>{!this.state.stopwatchStart ? 'START' : 'STOP'}</Text>
@@ -105,16 +160,8 @@ class TimerScreen extends React.Component {
             <Text style={{ fontSize: 20 }}>RESET</Text>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          style={{
-            flexDirection: 'row',
-            alignSelf: 'center',
-            marginTop: 20,
-            color: 'rgb(28, 184, 28)',
-          }}
-        >
-          <Text style={{ fontSize: 20 }}>ZAPISZ</Text>
-        </TouchableOpacity>
+        {this.state.isSaved}
+        {this.renderSaveButton()}
       </View>
     );
   }
@@ -132,18 +179,40 @@ const options = {
     fontSize: 30,
     color: '#000',
     marginLeft: 7,
+    alignSelf: 'center',
   },
 };
 
 const mapStateToProps = state => ({
   skillsCategories: state.skillsCategories,
+  timerRecords: state.timerRecords,
 });
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = { addTimerRecord, deleteTimerRecord };
 
 const TimerStack = createStackNavigator({
   MainView: {
-    screen: connect(mapStateToProps, mapDispatchToProps)(TimerScreen),
+    screen: createMaterialTopTabNavigator(
+      {
+        Timer: {
+          screen: connect(mapStateToProps, mapDispatchToProps)(TimerScreen),
+        },
+        Lista: {
+          screen: connect(mapStateToProps, mapDispatchToProps)(TimerList),
+        },
+      },
+      {
+        tabBarOptions: {
+          labelStyle: {
+            color: '#64b5f6',
+            fontWeight: 'bold',
+          },
+          style: {
+            backgroundColor: '#fff',
+          },
+        },
+      }
+    ),
     navigationOptions: ({ navigation }) => ({
       title: 'Timer',
       headerLeft: (

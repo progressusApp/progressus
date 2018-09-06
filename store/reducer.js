@@ -1,9 +1,12 @@
+import moment from 'moment';
 export const ADD_TASK = 'toDoList/newTask';
 export const UPDATE_TASK_CHECK = 'toDoList/updateTaskCheck';
 export const ADD_CATEGORY = 'skills/addCategory';
 export const ADD_SKILL = 'skills/addSkill';
 export const DELETE_SKILL = 'skills/deleteSkill';
 export const DELETE_CATEGORY = 'skills/deleteCategory';
+export const ADD_TIMER_RECORD = 'timer/addTimerRecord';
+export const DELETE_TIMER_RECORD = 'timer/deleteTimerRecord';
 
 const initialState = {
   toDoTasks: [
@@ -41,6 +44,16 @@ const initialState = {
       id: 2,
       title: 'Języki obce',
       skills: ['Angielski', 'Hiszpański'],
+    },
+  ],
+  timerRecords: [
+    {
+      id: 0,
+      categoryName: 'Sport',
+      skillName: 'Biegi długodystansowe',
+      startTime: '14:07: 00',
+      duration: '01:04:00',
+      endTime: '15:11:00',
     },
   ],
 };
@@ -86,63 +99,30 @@ export default function reducer(state = initialState, action) {
         ...state,
         skillsCategories: state.skillsCategories.filter(category => category.id !== action.payload.categoryID),
       };
+
+    case ADD_TIMER_RECORD:
+      return {
+        ...state,
+        timerRecords: [
+          ...state.timerRecords,
+          {
+            id: state.timerRecords.length,
+            categoryName: action.payload.categoryName,
+            skillName: action.payload.skillName,
+            startTime: action.payload.startTime,
+            duration: action.payload.formattedDuration,
+            endTime: moment(action.payload.startTime, 'HH:mm:ss')
+              .add(action.payload.duration, 'seconds')
+              .format('HH:mm:ss'),
+          },
+        ],
+      };
+    case DELETE_TIMER_RECORD:
+      return {
+        ...state,
+        timerRecords: state.timerRecords.filter(record => record.id !== action.payload.recordID),
+      };
     default:
       return state;
   }
-}
-
-export function addTask(task) {
-  return {
-    type: ADD_TASK,
-    payload: {
-      newTask: task,
-    },
-  };
-}
-
-export function updateTaskCheck(taskID) {
-  return {
-    type: UPDATE_TASK_CHECK,
-    payload: {
-      taskID,
-    },
-  };
-}
-
-export function addCategory(title) {
-  return {
-    type: ADD_CATEGORY,
-    payload: {
-      title,
-    },
-  };
-}
-
-export function deleteCategory(categoryID) {
-  return {
-    type: DELETE_CATEGORY,
-    payload: {
-      categoryID,
-    },
-  };
-}
-
-export function addSkill(skillName, categoryID) {
-  return {
-    type: ADD_SKILL,
-    payload: {
-      skillName,
-      categoryID,
-    },
-  };
-}
-
-export function deleteSkill(categoryID, skillIndex) {
-  return {
-    type: DELETE_SKILL,
-    payload: {
-      categoryID,
-      skillIndex,
-    },
-  };
 }

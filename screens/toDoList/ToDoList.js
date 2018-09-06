@@ -6,7 +6,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { CheckBox } from 'react-native-elements';
 import NewTaskView from './NewTask';
 import { connect } from 'react-redux';
-import { addTask, updateTaskCheck } from '../../reducer';
+import { addTask, updateTaskCheck } from '../../store/actions';
 
 class ToDoListScreen extends React.Component {
   updateTaskState = taskID => {
