@@ -6,7 +6,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { CheckBox } from 'react-native-elements';
 import NewTaskView from './NewTask';
 import { connect } from 'react-redux';
-import { addTask, updateTaskCheck } from '../../reducer';
+import { addTask, updateTaskCheck } from '../../store/actions';
 
 class ToDoListScreen extends React.Component {
   updateTaskState = taskID => {
@@ -113,6 +113,7 @@ const styles = StyleSheet.create({
     paddingTop: 5,
     paddingBottom: 5,
     paddingLeft: 10,
+    paddingRight: 10,
     borderBottomWidth: 1,
   },
   taskContent: {
