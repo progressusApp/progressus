@@ -56,6 +56,21 @@ const initialState = {
       endTime: '15:11:00',
     },
   ],
+  categoryNotes: [
+    {
+      id: 0,
+      categoryName: 'Sport',
+      notes: [
+        {
+          id: 0,
+          title: 'Dobra rozgrzewka',
+          contentType: 'text',
+          content:
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
+        },
+      ],
+    },
+  ],
 };
 
 export default function reducer(state = initialState, action) {

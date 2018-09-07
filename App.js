@@ -12,6 +12,7 @@ import MainViewStack from './MainView';
 import ToDoListStack from './screens/toDoList/ToDoList';
 import SkillsStack from './screens/Skills';
 import TimerStack from './screens/Timer';
+import KnowledgeBaseStack from './screens/knowledgeBase/KnowledgeBase';
 
 const store = createStore(reducer);
 
@@ -44,6 +45,10 @@ const DrawerExample = createDrawerNavigator(
     Timer: {
       path: '/timer',
       screen: TimerStack,
+    },
+    Base: {
+      path: '/path',
+      screen: KnowledgeBaseStack,
     },
   },
   {
