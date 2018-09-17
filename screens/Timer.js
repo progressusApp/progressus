@@ -21,7 +21,6 @@ import {
 } from 'react-navigation';
 import { connect } from 'react-redux';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import BackgroundTask from 'react-native-background-task';
 import { Stopwatch } from 'react-native-stopwatch-timer';
 import TimerList from './TimerList';
 import { addTimerRecord, deleteTimerRecord } from '../store/actions';
