@@ -24,7 +24,7 @@ export default class NewTask extends React.Component {
       <View style={styles.container}>
         <Text style={styles.label}>Co masz do zrobienia?</Text>
         <TextInput
-          style={{ padding: 10, fontWeight: '500', marginBottom: 25 }}
+          style={styles.input}
           onChangeText={value => this.setState({ taskContent: value })}
           value={taskContent}
           multiline={true}
@@ -55,7 +55,7 @@ export default class NewTask extends React.Component {
           }}
         />
         <View style={styles.button}>
-          <Button onPress={() => this.addTask('dupa', '', false)} title="Dodaj" />
+          <Button onPress={() => this.addTask()} title="Dodaj" />
         </View>
       </View>
     );
@@ -69,6 +69,7 @@ const styles = StyleSheet.create({
     paddingBottom: 30,
     paddingLeft: 25,
     paddingRight: 25,
+    backgroundColor: '#fff',
   },
   label: {
     color: '#64b5f6',
@@ -77,5 +78,12 @@ const styles = StyleSheet.create({
   button: {
     alignSelf: 'stretch',
     marginTop: 50,
+  },
+  input: {
+    padding: 10,
+    fontWeight: '500',
+    marginBottom: 25,
+    borderWidth: 0,
+    borderBottomWidth: 0.5,
   },
 });

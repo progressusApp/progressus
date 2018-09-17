@@ -6,6 +6,8 @@ export const DELETE_SKILL = 'skills/deleteSkill';
 export const DELETE_CATEGORY = 'skills/deleteCategory';
 export const ADD_TIMER_RECORD = 'timer/addTimerRecord';
 export const DELETE_TIMER_RECORD = 'timer/deleteTimerRecord';
+export const ADD_NOTE = 'knowlegdeBase/addNote';
+export const DELETE_NOTE = 'knowlegdeBase/deleteNote';
 
 export function addTask(task) {
   return {
@@ -81,6 +83,27 @@ export function deleteTimerRecord(recordID) {
     type: DELETE_TIMER_RECORD,
     payload: {
       recordID,
+    },
+  };
+}
+
+export function addNote(categoryID, noteTitle, noteType, noteContent) {
+  return {
+    type: ADD_NOTE,
+    payload: {
+      categoryID,
+      noteTitle,
+      noteType,
+      noteContent,
+    },
+  };
+}
+
+export function deleteNote(noteID) {
+  return {
+    type: DELETE_NOTE,
+    payload: {
+      noteID,
     },
   };
 }
