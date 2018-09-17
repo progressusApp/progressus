@@ -7,6 +7,8 @@ export const DELETE_SKILL = 'skills/deleteSkill';
 export const DELETE_CATEGORY = 'skills/deleteCategory';
 export const ADD_TIMER_RECORD = 'timer/addTimerRecord';
 export const DELETE_TIMER_RECORD = 'timer/deleteTimerRecord';
+export const ADD_NOTE = 'knowlegdeBase/addNote';
+export const DELETE_NOTE = 'knowlegdeBase/deleteNote';
 
 const initialState = {
   toDoTasks: [
@@ -56,19 +58,29 @@ const initialState = {
       endTime: '15:11:00',
     },
   ],
-  categoryNotes: [
+  // categoryNotes: [
+  //   {
+  //     id: 0,
+  //     categoryName: 'Sport',
+  //     notes: [
+  //       {
+  //         id: 0,
+  //         title: 'Dobra rozgrzewka',
+  //         contentType: 'text',
+  //         content:
+  //           'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
+  //       },
+  //     ],
+  //   },
+  // ],
+  notes: [
     {
       id: 0,
-      categoryName: 'Sport',
-      notes: [
-        {
-          id: 0,
-          title: 'Dobra rozgrzewka',
-          contentType: 'text',
-          content:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
-        },
-      ],
+      categoryID: 0,
+      title: 'Dobra rozgrzewka',
+      contentType: 'text',
+      content:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
     },
   ],
 };
@@ -136,6 +148,25 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         timerRecords: state.timerRecords.filter(record => record.id !== action.payload.recordID),
+      };
+    case ADD_NOTE:
+      return {
+        ...state,
+        notes: [
+          ...state.notes,
+          {
+            id: state.notes.length,
+            categoryID: action.payload.categoryID,
+            title: action.payload.noteTitle,
+            contentType: action.payload.noteType,
+            content: action.payload.noteContent,
+          },
+        ],
+      };
+    case DELETE_NOTE:
+      return {
+        ...state,
+        notes: state.notes.filter(note => note.id !== action.payload.noteID),
       };
     default:
       return state;

@@ -32,22 +32,18 @@ class NotesView extends React.Component {
   }
 
   render() {
-    const category = this.props.navigation.getParam('notes');
-    const { notes } = category;
+    const categoryID = this.props.navigation.getParam('categoryID');
+    const categoryName = this.props.navigation.getParam('categoryName');
+    const notes = this.props.notes.filter(note => note.categoryID === categoryID);
     return (
       <View style={styles.container}>
-        <Text style={styles.header}>{category.categoryName}</Text>
+        <Text style={styles.header}>{categoryName}</Text>
+        {console.log('notes ', notes)}
         <View style={styles.notesWrapper}>
           {notes.map(note => (
             <View style={styles.note} key={note.id}>
               <Text style={styles.noteTitle}>{note.title}</Text>
-              <MaterialIcons
-                name="delete"
-                size={20}
-                onPress={() => {
-                  console.log('feleted');
-                }}
-              />
+              <MaterialIcons name="delete" size={20} onPress={() => this.props.deleteNote(note.id)} />
             </View>
           ))}
         </View>

@@ -26,6 +26,12 @@ import BackgroundTask from 'react-native-background-task';
 import { Stopwatch } from 'react-native-stopwatch-timer';
 import moment from 'moment';
 import NotesView from './NotesView';
+import NewNote from './NewNote';
+import TextNote from './TextNote';
+import AudioNote from './AudioNote';
+import GraphicNote from './GraphicNote';
+import _ from 'lodash';
+import { addNote, deleteNote } from '../../store/actions';
 
 class KnowledgeBaseScreen extends React.Component {
   componentWillUnmount() {
@@ -33,31 +39,44 @@ class KnowledgeBaseScreen extends React.Component {
   }
 
   render() {
+    const existingCategoriesIDs = _.uniq(this.props.notes.map(note => note.categoryID));
+
     return (
       <View style={styles.container}>
-        <Text style={styles.header}>Notatki</Text>
         <View style={styles.categoriesWrapper}>
-          {this.props.categoryNotes.map(category => (
-            <TouchableOpacity
-              key={category.id}
-              style={styles.category}
-              onPress={() => this.props.navigation.navigate('NotesView', { notes: category })}
-            >
-              <Text style={styles.categoryTitle}>{category.categoryName}</Text>
-              <Text>Liczba notatek: {category.notes.length}</Text>
-            </TouchableOpacity>
-          ))}
+          {console.log('accantus here notes ', this.props.notes)}
+          {this.props.skillsCategories.map(category => {
+            if (!existingCategoriesIDs.includes(category.id)) {
+              return null;
+            }
+            return (
+              <TouchableOpacity
+                key={category.id}
+                style={styles.category}
+                onPress={() =>
+                  this.props.navigation.navigate('NotesView', { categoryID: category.id, categoryName: category.title })
+                }
+              >
+                <Text style={styles.categoryTitle}>{category.title}</Text>
+                {/* <Text>Liczba notatek: {category.notes.length}</Text> */}
+              </TouchableOpacity>
+            );
+          })}
         </View>
+        <TouchableOpacity onPress={() => this.props.navigation.navigate('NewNote')} style={styles.newNoteButton}>
+          <MaterialIcons name="add" size={30} />
+        </TouchableOpacity>
       </View>
     );
   }
 }
 
 const mapStateToProps = state => ({
-  categoryNotes: state.categoryNotes,
+  notes: state.notes,
+  skillsCategories: state.skillsCategories,
 });
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = { addNote, deleteNote };
 
 const KnowledgeBaseStack = createStackNavigator({
   MainView: {
@@ -78,8 +97,44 @@ const KnowledgeBaseStack = createStackNavigator({
       ),
     }),
   },
+  NewNote: {
+    screen: connect(mapStateToProps, mapDispatchToProps)(NewNote),
+    navigationOptions: ({ navigation }) => ({
+      title: 'Nowa notatka',
+      headerLeft: (
+        <MaterialIcons name="arrow-back" size={30} style={{ marginLeft: 15 }} onPress={() => navigation.goBack()} />
+      ),
+    }),
+  },
+  TextNote: {
+    screen: connect(mapStateToProps, mapDispatchToProps)(TextNote),
+    navigationOptions: ({ navigation }) => ({
+      title: 'Notatka tekstowa',
+      headerLeft: (
+        <MaterialIcons name="arrow-back" size={30} style={{ marginLeft: 15 }} onPress={() => navigation.goBack()} />
+      ),
+    }),
+  },
+  AudioNote: {
+    screen: connect(mapStateToProps, mapDispatchToProps)(AudioNote),
+    navigationOptions: ({ navigation }) => ({
+      title: 'Notatka głosowa',
+      headerLeft: (
+        <MaterialIcons name="arrow-back" size={30} style={{ marginLeft: 15 }} onPress={() => navigation.goBack()} />
+      ),
+    }),
+  },
+  GraphicNote: {
+    screen: connect(mapStateToProps, mapDispatchToProps)(GraphicNote),
+    navigationOptions: ({ navigation }) => ({
+      title: 'Notatka graficzna',
+      headerLeft: (
+        <MaterialIcons name="arrow-back" size={30} style={{ marginLeft: 15 }} onPress={() => navigation.goBack()} />
+      ),
+    }),
+  },
 });
-
+//NewNote
 KnowledgeBaseStack.navigationOptions = {
   drawerLabel: 'Baza wiedzy',
   drawerIcon: ({ tintColor }) => <EntypoIcons name="open-book" size={24} style={{ color: tintColor }} />,
@@ -91,8 +146,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    paddingTop: 20,
-    paddingBottom: 20,
   },
   category: {
     height: 70,
@@ -118,5 +171,18 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 20,
     marginLeft: 20,
+  },
+  newNoteButton: {
+    backgroundColor: '#64b5f6',
+    width: 60,
+    height: 60,
+    borderRadius: 100 / 2,
+    position: 'absolute',
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 30,
+    marginBottom: 30,
   },
 });
