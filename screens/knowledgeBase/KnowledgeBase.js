@@ -22,7 +22,6 @@ import {
 import { connect } from 'react-redux';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import EntypoIcons from 'react-native-vector-icons/Entypo';
-import BackgroundTask from 'react-native-background-task';
 import { Stopwatch } from 'react-native-stopwatch-timer';
 import moment from 'moment';
 import NotesView from './NotesView';
