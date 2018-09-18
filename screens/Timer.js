@@ -150,7 +150,6 @@ class TimerScreen extends React.Component {
           options={options}
           getTime={this.getFormattedTime}
         />
-        {/* {console.log('dupa :< ', this.currentTime)} */}
         <View style={styles.stopwatchButtonsWrapper}>
           <TouchableOpacity onPress={this.toggleStopwatch}>
             <Text style={{ fontSize: 20 }}>{!this.state.stopwatchStart ? 'START' : 'STOP'}</Text>

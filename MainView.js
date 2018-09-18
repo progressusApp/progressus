@@ -5,12 +5,8 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 const MainViewScreen = ({ navigation }) => (
   <View style={styles.container}>
-    <Text style={styles.welcome}>Welcome to React Native!</Text>
-    <Text style={styles.instructions}>To get started, edit index.ios.js</Text>
-    <Text style={styles.instructions}>
-      Press Cmd+R to reload,{'\n'}
-      Cmd+Control+Z for dev menu
-    </Text>
+    <Text style={styles.welcome}>Witaj w aplikacji wspomagającej rozwój umiejętności!</Text>
+    <Text style={styles.instructions}>Skorzystaj z menu aby zobaczyć funkcje.</Text>
   </View>
 );
 
@@ -41,9 +37,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   welcome: {
-    alignItems: 'center',
+    alignSelf: 'center',
     color: 'rgb(60, 167, 190)',
-    fontSize: 25,
+    fontSize: 20,
+    textAlign: 'center',
   },
   topBar: {
     backgroundColor: 'yellow',
