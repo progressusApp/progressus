@@ -3,7 +3,6 @@ import { Button, ScrollView, StatusBar, Text, View } from 'react-native';
 import { createStackNavigator, SafeAreaView } from 'react-navigation';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { createDrawerNavigator } from 'react-navigation-drawer';
-import { KeepAwake } from 'expo';
 import { createStore, applyMiddleware } from 'redux';
 import { Provider, connect } from 'react-redux';
 import reducer from './store/reducer';
