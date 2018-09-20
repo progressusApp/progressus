@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, FlatList, TextInput, ScrollView, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, FlatList, TextInput, ScrollView, TouchableOpacity, AsyncStorage } from 'react-native';
 import { createStackNavigator, SafeAreaView } from 'react-navigation';
 import Icon from 'react-native-vector-icons/Feather';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -9,8 +9,22 @@ import { connect } from 'react-redux';
 import { addTask, updateTaskCheck } from '../../store/actions';
 
 class ToDoListScreen extends React.Component {
+  state = {
+    tasks: [],
+  };
+
+  getTasks = () => {
+    AsyncStorage.getItem('@toDoTasks').then(tasks => this.setState({ tasks: JSON.parse(tasks) }));
+  };
+
+  componentWillMount() {
+    this.getTasks();
+  }
+
   updateTaskState = taskID => {
-    this.props.updateTaskCheck(taskID);
+    const tasks = this.state.tasks.map(task => (task.id === taskID ? { ...task, done: !task.done } : task));
+    // this.props.updateTaskCheck(taskID);
+    AsyncStorage.setItem('@toDoTasks', JSON.stringify(tasks)).then(this.getTasks);
   };
 
   renderItem = ({ item }) => {
@@ -33,13 +47,14 @@ class ToDoListScreen extends React.Component {
   setRef = el => (this.list = el);
 
   render() {
+    console.log('todo list state ', this.state);
     return (
       <View style={styles.container}>
         <ScrollView>
           <FlatList
             ref={this.setRef}
             style={{ padding: 10, flex: 1 }}
-            data={this.props.tasks}
+            data={this.state.tasks}
             renderItem={this.renderItem}
             keyExtractor={this.keyExtractor}
           />
@@ -53,7 +68,7 @@ class ToDoListScreen extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  tasks: state.toDoTasks,
+  // tasks: state.toDoTasks,
 });
 
 const mapDispatchToProps = {
@@ -63,7 +78,10 @@ const mapDispatchToProps = {
 
 const ToDoListStack = createStackNavigator({
   MainView: {
-    screen: connect(mapStateToProps, mapDispatchToProps)(ToDoListScreen),
+    screen: connect(
+      mapStateToProps,
+      mapDispatchToProps
+    )(ToDoListScreen),
     navigationOptions: ({ navigation }) => ({
       title: 'Lista "to do"',
       headerLeft: (
@@ -72,7 +90,10 @@ const ToDoListStack = createStackNavigator({
     }),
   },
   NewTaskView: {
-    screen: connect(mapStateToProps, mapDispatchToProps)(NewTaskView),
+    screen: connect(
+      mapStateToProps,
+      mapDispatchToProps
+    )(NewTaskView),
     navigationOptions: ({ navigation }) => ({
       title: 'Nowe zadanie',
       headerLeft: (

@@ -62,5 +62,5 @@ typings/
 
 .expo
 
-android
-ios
+android/build
+ios/build

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, ScrollView, StatusBar, Text, View } from 'react-native';
+import { Button, ScrollView, StatusBar, Text, View, AsyncStorage } from 'react-native';
 import { createStackNavigator, SafeAreaView } from 'react-navigation';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { createDrawerNavigator } from 'react-navigation-drawer';
@@ -12,13 +12,24 @@ import ToDoListStack from './screens/toDoList/ToDoList';
 import SkillsStack from './screens/Skills';
 import TimerStack from './screens/Timer';
 import KnowledgeBaseStack from './screens/knowledgeBase/KnowledgeBase';
+import { toDoTasks, skillsCategories, timerRecords, notes } from './mockupData.js';
 
 const store = createStore(reducer);
 
 console.disableYellowBox = true;
 
 export default class App extends React.Component {
+  componentWillMount() {
+    AsyncStorage.setItem('@toDoTasks', JSON.stringify(toDoTasks));
+    AsyncStorage.setItem('@skillsCategories', JSON.stringify(skillsCategories));
+    AsyncStorage.setItem('@timerRecords', JSON.stringify(timerRecords));
+    AsyncStorage.setItem('@notes', JSON.stringify(notes));
+  }
+  getStorage = () => {
+    AsyncStorage.getItem('@skillsCategories').then(skills => console.log(JSON.parse(skills)));
+  };
   render() {
+    this.getStorage();
     return (
       <Provider store={store}>
         <DrawerExample />

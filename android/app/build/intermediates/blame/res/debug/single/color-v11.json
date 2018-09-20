@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "/Users/adastachowiak/projects/progressus-not-expo/progressus/android/app/build/intermediates/res/merged/debug/color-v11/abc_background_cache_hint_selector_material_light.xml",
+        "source": "/Users/adastachowiak/.android/build-cache/40fd35aff65258228a9a662def69355f7cba410d/output/res/color-v11/abc_background_cache_hint_selector_material_light.xml"
+    },
+    {
+        "merged": "/Users/adastachowiak/projects/progressus-not-expo/progressus/android/app/build/intermediates/res/merged/debug/color-v11/abc_background_cache_hint_selector_material_dark.xml",
+        "source": "/Users/adastachowiak/.android/build-cache/40fd35aff65258228a9a662def69355f7cba410d/output/res/color-v11/abc_background_cache_hint_selector_material_dark.xml"
+    }
+]

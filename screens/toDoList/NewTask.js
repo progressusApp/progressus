@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Button, AsyncStorage } from 'react-native';
 import DatePicker from 'react-native-datepicker';
 import moment from 'moment';
 
@@ -14,8 +14,13 @@ export default class NewTask extends React.Component {
   addTask = () => {
     const { addTask } = this.props;
     const { taskContent, date } = this.state;
-    addTask({ taskContent, date, done: false });
-    this.props.navigation.navigate('MainView');
+    AsyncStorage.getItem('@toDoTasks').then(tasks => {
+      const toDoTasks = [JSON.parse(tasks), { date, done: false, id: tasks.length }];
+      AsyncStorage.setItem('@toDoTasks', JSON.stringify(toDoTasks)).then(() => {
+        this.props.navigation.navigate('MainView');
+      });
+    });
+    // addTask({ taskContent, date, done: false });
   };
 
   render() {
