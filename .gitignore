@@ -63,4 +63,5 @@ typings/
 .expo
 
 android/build
+android/app/build
 ios/build

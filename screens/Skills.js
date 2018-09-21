@@ -10,6 +10,8 @@ import {
   Button,
   Dimensions,
   KeyboardAvoidingView,
+  Modal,
+  Alert,
 } from 'react-native';
 import { createStackNavigator, SafeAreaView } from 'react-navigation';
 import Icon from 'react-native-vector-icons/Feather';
@@ -93,36 +95,46 @@ class SkillsScreen extends React.Component {
     const { skillsCategories, addCategory } = this.props;
     const { newCategoryName } = this.state;
     return (
-      <KeyboardAvoidingView style={styles.container} behavior="position">
-        <View style={styles.inputWrapper}>
-          <TextInput
-            style={styles.input}
-            onChangeText={value => this.setState({ newCategoryName: value })}
-            value={newCategoryName}
-            multiline={true}
-            placeholder="Dodaj nową kategorię..."
-          />
-          <View>
-            <Button
-              onPress={() => {
-                addCategory(newCategoryName);
-                this.setState({ newCategoryName: '' });
+      <KeyboardAvoidingView behavior="position" style={styles.container}>
+        <View>
+          <View style={styles.inputWrapper}>
+            <TextInput
+              style={styles.input}
+              onChangeText={value => this.setState({ newCategoryName: value })}
+              value={newCategoryName}
+              multiline={true}
+              placeholder="Dodaj nową kategorię..."
+            />
+            <View>
+              <Button
+                onPress={() => {
+                  addCategory(newCategoryName);
+                  this.setState({ newCategoryName: '' });
+                }}
+                title="Dodaj"
+              />
+            </View>
+            <Modal
+              animationType="slide"
+              transparent={false}
+              visible={true}
+              onRequestClose={() => {
+                Alert.alert('Modal has been closed.');
               }}
-              title="Dodaj"
             />
           </View>
+          <ScrollView>
+            <Accordion
+              activeSection={this.state.activeSection}
+              sections={skillsCategories}
+              touchableComponent={TouchableOpacity}
+              renderHeader={this.renderHeader}
+              renderContent={this.renderContent}
+              duration={400}
+              onChange={this.setSection}
+            />
+          </ScrollView>
         </View>
-        <ScrollView>
-          <Accordion
-            activeSection={this.state.activeSection}
-            sections={skillsCategories}
-            touchableComponent={TouchableOpacity}
-            renderHeader={this.renderHeader}
-            renderContent={this.renderContent}
-            duration={400}
-            onChange={this.setSection}
-          />
-        </ScrollView>
       </KeyboardAvoidingView>
     );
   }
@@ -141,12 +153,16 @@ const mapDispatchToProps = {
 
 const SkillsStack = createStackNavigator({
   MainView: {
-    screen: connect(mapStateToProps, mapDispatchToProps)(SkillsScreen),
+    screen: connect(
+      mapStateToProps,
+      mapDispatchToProps
+    )(SkillsScreen),
     navigationOptions: ({ navigation }) => ({
       title: 'Lista umiejętności',
       headerLeft: (
         <MaterialIcons name="menu" size={30} style={{ marginLeft: 15 }} onPress={() => navigation.openDrawer()} />
       ),
+      headerRight: <EntypoIcons name="dots-three-vertical" size={20} style={{ marginRight: 15 }} />,
     }),
   },
 });

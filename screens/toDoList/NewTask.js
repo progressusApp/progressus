@@ -14,13 +14,9 @@ export default class NewTask extends React.Component {
   addTask = () => {
     const { addTask } = this.props;
     const { taskContent, date } = this.state;
-    AsyncStorage.getItem('@toDoTasks').then(tasks => {
-      const toDoTasks = [JSON.parse(tasks), { date, done: false, id: tasks.length }];
-      AsyncStorage.setItem('@toDoTasks', JSON.stringify(toDoTasks)).then(() => {
-        this.props.navigation.navigate('MainView');
-      });
-    });
-    // addTask({ taskContent, date, done: false });
+
+    addTask({ content: taskContent, date, done: false });
+    this.props.navigation.navigate('MainView');
   };
 
   render() {

@@ -9,22 +9,22 @@ import { connect } from 'react-redux';
 import { addTask, updateTaskCheck } from '../../store/actions';
 
 class ToDoListScreen extends React.Component {
-  state = {
-    tasks: [],
-  };
+  // state = {
+  //   tasks: [],
+  // };
+  //
+  // getTasks = () => {
+  //   AsyncStorage.getItem('@toDoTasks').then(tasks => this.setState({ tasks: JSON.parse(tasks) }));
+  // };
 
-  getTasks = () => {
-    AsyncStorage.getItem('@toDoTasks').then(tasks => this.setState({ tasks: JSON.parse(tasks) }));
-  };
-
-  componentWillMount() {
-    this.getTasks();
-  }
+  // componentWillMount() {
+  //   this.getTasks();
+  // }
 
   updateTaskState = taskID => {
-    const tasks = this.state.tasks.map(task => (task.id === taskID ? { ...task, done: !task.done } : task));
-    // this.props.updateTaskCheck(taskID);
-    AsyncStorage.setItem('@toDoTasks', JSON.stringify(tasks)).then(this.getTasks);
+    // const tasks = this.state.tasks.map(task => (task.id === taskID ? { ...task, done: !task.done } : task));
+    this.props.updateTaskCheck(taskID);
+    // AsyncStorage.setItem('@toDoTasks', JSON.stringify(tasks)).then(this.getTasks);
   };
 
   renderItem = ({ item }) => {
@@ -47,28 +47,26 @@ class ToDoListScreen extends React.Component {
   setRef = el => (this.list = el);
 
   render() {
-    console.log('todo list state ', this.state);
+    console.log('STATE ', this.props.state);
     return (
       <View style={styles.container}>
         <ScrollView>
           <FlatList
             ref={this.setRef}
             style={{ padding: 10, flex: 1 }}
-            data={this.state.tasks}
+            data={this.props.tasks}
             renderItem={this.renderItem}
             keyExtractor={this.keyExtractor}
           />
         </ScrollView>
-        <TouchableOpacity onPress={() => this.props.navigation.navigate('NewTaskView')} style={styles.newTaskButton}>
-          <MaterialIcons name="add" size={30} />
-        </TouchableOpacity>
       </View>
     );
   }
 }
 
 const mapStateToProps = state => ({
-  // tasks: state.toDoTasks,
+  tasks: state.toDoTasks,
+  state: state,
 });
 
 const mapDispatchToProps = {
@@ -86,6 +84,11 @@ const ToDoListStack = createStackNavigator({
       title: 'Lista "to do"',
       headerLeft: (
         <MaterialIcons name="menu" size={30} style={{ marginLeft: 15 }} onPress={() => navigation.openDrawer()} />
+      ),
+      headerRight: (
+        <TouchableOpacity onPress={() => navigation.navigate('NewTaskView')}>
+          <MaterialIcons name="add" size={30} style={{ marginRight: 15 }} />
+        </TouchableOpacity>
       ),
     }),
   },

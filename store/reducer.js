@@ -1,6 +1,6 @@
 import moment from 'moment';
 export const ADD_TASK = 'toDoList/newTask';
-// export const UPDATE_TASK_CHECK = 'toDoList/updateTaskCheck';
+export const UPDATE_TASK_CHECK = 'toDoList/updateTaskCheck';
 export const ADD_CATEGORY = 'skills/addCategory';
 export const ADD_SKILL = 'skills/addSkill';
 export const DELETE_SKILL = 'skills/deleteSkill';
@@ -86,38 +86,58 @@ const initialState = {
   ],
 };
 
-export default function reducer(state = initialState, action) {
+function updateStorage(state) {
+  AsyncStorage.setItem('@toDoTasks', JSON.stringify(state.toDoTasks));
+  AsyncStorage.setItem('@skillsCategories', JSON.stringify(state.skillsCategories));
+  AsyncStorage.setItem('@timerRecords', JSON.stringify(state.timerRecords));
+  AsyncStorage.setItem('@notes', JSON.stringify(state.notes));
+}
+
+export default function reducer(state = {}, action) {
+  let newState = {};
   switch (action.type) {
-    case ADD_TASK:
-      return { ...state, toDoTasks: [...state.toDoTasks, { ...action.payload.newTask, id: state.toDoTasks.length }] };
-    // case UPDATE_TASK_CHECK:
-    //   return {
-    //     ...state,
-    //     toDoTasks: state.toDoTasks.map(
-    //       task => (task.id === action.payload.taskID ? { ...task, done: !task.done } : task)
-    //     ),
-    //   };
-    case ADD_CATEGORY:
+    case 'GET_STORAGE_DATA':
       return {
+        ...state,
+        ...action.payload.data,
+      };
+    case ADD_TASK:
+      newState = {
+        ...state,
+        toDoTasks: [...state.toDoTasks, { ...action.payload.newTask, id: state.toDoTasks.length }],
+      };
+      updateStorage(newState);
+      return newState;
+    case UPDATE_TASK_CHECK:
+      newState = {
+        ...state,
+        toDoTasks: state.toDoTasks.map(
+          task => (task.id === action.payload.taskID ? { ...task, done: !task.done } : task)
+        ),
+      };
+      updateStorage(newState);
+      return newState;
+    case ADD_CATEGORY:
+      newState = {
         ...state,
         skillsCategories: [...state.skillsCategories, { title: action.payload.title, skills: [] }],
       };
+      updateStorage(newState);
+      return newState;
     case ADD_SKILL:
-      const skillsCategories = state.skillsCategories.map(
-        category =>
-          category.id === action.payload.categoryID
-            ? { ...category, skills: [...category.skills, action.payload.skillName] }
-            : category
-      );
-      console.log('skills ', skillsCategories);
-      AsyncStorage.setItem('@skillsCategories', JSON.stringify(skillsCategories));
-      console.log('added to storage');
-      return {
+      newState = {
         ...state,
-        skillsCategories: skillsCategories,
+        skillsCategories: state.skillsCategories.map(
+          category =>
+            category.id === action.payload.categoryID
+              ? { ...category, skills: [...category.skills, action.payload.skillName] }
+              : category
+        ),
       };
+      updateStorage(newState);
+      return newState;
     case DELETE_SKILL:
-      return {
+      newState = {
         ...state,
         skillsCategories: state.skillsCategories.map(
           category =>
@@ -126,14 +146,17 @@ export default function reducer(state = initialState, action) {
               : category
         ),
       };
+      updateStorage(newState);
+      return newState;
     case DELETE_CATEGORY:
-      return {
+      newState = {
         ...state,
         skillsCategories: state.skillsCategories.filter(category => category.id !== action.payload.categoryID),
       };
-
+      updateStorage(newState);
+      return newState;
     case ADD_TIMER_RECORD:
-      return {
+      newState = {
         ...state,
         timerRecords: [
           ...state.timerRecords,
@@ -149,13 +172,17 @@ export default function reducer(state = initialState, action) {
           },
         ],
       };
+      updateStorage(newState);
+      return newState;
     case DELETE_TIMER_RECORD:
-      return {
+      newState = {
         ...state,
         timerRecords: state.timerRecords.filter(record => record.id !== action.payload.recordID),
       };
+      updateStorage(newState);
+      return newState;
     case ADD_NOTE:
-      return {
+      newState = {
         ...state,
         notes: [
           ...state.notes,
@@ -168,11 +195,15 @@ export default function reducer(state = initialState, action) {
           },
         ],
       };
+      updateStorage(newState);
+      return newState;
     case DELETE_NOTE:
-      return {
+      newState = {
         ...state,
         notes: state.notes.filter(note => note.id !== action.payload.noteID),
       };
+      updateStorage(newState);
+      return newState;
     default:
       return state;
   }

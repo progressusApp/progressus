@@ -1,5 +1,5 @@
 #Internal package file, do not edit.
-#Thu Sep 20 00:32:57 CEST 2018
+#Thu Sep 20 22:19:33 CEST 2018
 5.base=/Users/adastachowiak/projects/progressus-not-expo/progressus/android/app/build/intermediates/assets/debug
 22.path=lib/x86_64/libimagepipeline.so
 32.set=ASSET
