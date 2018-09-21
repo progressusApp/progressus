@@ -1,13 +1,8 @@
 import React from 'react';
-import { StyleSheet, Text, View, FlatList, TextInput, ScrollView, TouchableOpacity } from 'react-native';
-import { createStackNavigator, SafeAreaView } from 'react-navigation';
-import Icon from 'react-native-vector-icons/Feather';
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import EntypoIcons from 'react-native-vector-icons/Entypo';
-import { CheckBox } from 'react-native-elements';
-import { connect } from 'react-redux';
 import Accordion from 'react-native-collapsible/Accordion';
-// import { deleteTimerRecord } from '../store/actions';
 
 export default class TimerList extends React.Component {
   state = {
@@ -66,7 +61,6 @@ export default class TimerList extends React.Component {
     const { timerRecords } = this.props;
     return (
       <View style={styles.container}>
-        {console.log('timer list tuttaj coś kupa ', timerRecords)}
         <ScrollView>
           <Accordion
             activeSection={this.state.activeSection}
@@ -83,50 +77,10 @@ export default class TimerList extends React.Component {
   }
 }
 
-// const mapStateToProps = state => ({
-//   tasks: state.toDoTasks,
-// });
-//
-// const mapDispatchToProps = {
-//   addTask,
-//   updateTaskCheck,
-// };
-
-// export default connect(mapStateToProps, mapDispatchToProps)(TimerList);
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-  },
-  task: {
-    flex: 1,
-    marginTop: 10,
-    paddingTop: 5,
-    paddingBottom: 5,
-    paddingLeft: 10,
-    paddingRight: 10,
-    borderBottomWidth: 1,
-  },
-  taskContent: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  taskLabel: {
-    marginLeft: 10,
-  },
-  newTaskButton: {
-    backgroundColor: '#64b5f6',
-    width: 60,
-    height: 60,
-    borderRadius: 100 / 2,
-    position: 'absolute',
-    right: 0,
-    bottom: 0,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 30,
-    marginBottom: 30,
   },
   headerWrapper: {
     justifyContent: 'space-between',
@@ -144,9 +98,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     color: '#64b5f6',
-  },
-  deleteButton: {
-    marginBottom: 10,
   },
   contentWrapper: {
     paddingTop: 5,

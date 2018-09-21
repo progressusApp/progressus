@@ -1,34 +1,17 @@
 import React from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  FlatList,
-  TextInput,
-  ScrollView,
-  TouchableOpacity,
-  Button,
-  Dimensions,
-  KeyboardAvoidingView,
-  Picker,
-  TouchableHighlight,
-} from 'react-native';
-import {
-  createStackNavigator,
-  SafeAreaView,
-  createBottomTabNavigator,
-  createMaterialTopTabNavigator,
-} from 'react-navigation';
-import { connect } from 'react-redux';
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image } from 'react-native';
+import { createStackNavigator } from 'react-navigation';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import EntypoIcons from 'react-native-vector-icons/Entypo';
-import { Stopwatch } from 'react-native-stopwatch-timer';
-import moment from 'moment';
 
 class NotesView extends React.Component {
-  componentWillUnmount() {
-    console.log('unmount');
-  }
+  renderNotePreview = (content, contentType) => {
+    if (contentType === 'text') {
+      return <Text>{content.substring(0, 50)}...</Text>;
+    } else if (contentType === 'graphic') {
+      return <Image style={{ width: 50, height: 50 }} source={{ uri: content }} />;
+    }
+  };
 
   render() {
     const categoryID = this.props.navigation.getParam('categoryID');
@@ -37,31 +20,33 @@ class NotesView extends React.Component {
     return (
       <View style={styles.container}>
         <Text style={styles.header}>{categoryName}</Text>
-        {console.log('notes ', notes)}
-        <View style={styles.notesWrapper}>
-          {notes.map(note => (
-            <View style={styles.note} key={note.id}>
-              <Text style={styles.noteTitle}>{note.title}</Text>
-              <MaterialIcons name="delete" size={20} onPress={() => this.props.deleteNote(note.id)} />
-            </View>
-          ))}
-        </View>
+        <ScrollView>
+          <View style={styles.notesWrapper}>
+            {notes.map(note => (
+              <View style={styles.note} key={note.id}>
+                <TouchableOpacity
+                  onPress={() => this.props.navigation.navigate('NotePreview', { note })}
+                  style={{ flex: 0.9 }}
+                >
+                  <Text style={styles.noteTitle}>{note.title}</Text>
+                  {this.renderNotePreview(note.content, note.contentType)}
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => this.props.deleteNote(note.id)}>
+                  <MaterialIcons name="delete" size={20} />
+                </TouchableOpacity>
+              </View>
+            ))}
+          </View>
+        </ScrollView>
       </View>
     );
   }
 }
 
-// const mapStateToProps = state => ({
-//   categoryNotes: state.categoryNotes,
-// });
-
-const mapDispatchToProps = {};
-
 const NotesViewStack = createStackNavigator({
   NotesView: {
     screen: NotesView,
     navigationOptions: ({ navigation }) => {
-      console.log('navigation ', navigation);
       return {
         title: 'Notatki',
         headerLeft: (

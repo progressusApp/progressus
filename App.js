@@ -1,10 +1,9 @@
 import React from 'react';
-import { Button, ScrollView, StatusBar, Text, View, AsyncStorage } from 'react-native';
-import { createStackNavigator, SafeAreaView } from 'react-navigation';
+import { Button, Text, View, AsyncStorage } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { createDrawerNavigator } from 'react-navigation-drawer';
-import { createStore, applyMiddleware } from 'redux';
-import { Provider, connect } from 'react-redux';
+import { createStore } from 'redux';
+import { Provider } from 'react-redux';
 import reducer from './store/reducer';
 import { getDataFromStorage, setDataStorage } from './store/actions';
 import MainViewStack from './MainView';
@@ -57,19 +56,13 @@ export default class App extends React.Component {
 
   componentWillUnmount() {
     const storage = store.getState();
-    console.log('componentWillUnmount ', storage);
     AsyncStorage.setItem('@toDoTasks', JSON.stringify(storage.toDoTasks));
     AsyncStorage.setItem('@skillsCategories', JSON.stringify(storage.skillsCategories));
     AsyncStorage.setItem('@timerRecords', JSON.stringify(storage.timerRecords));
     AsyncStorage.setItem('@notes', JSON.stringify(storage.notes));
   }
 
-  // getStorage = () => {
-  //   AsyncStorage.getItem('@skillsCategories').then(skills => console.log(JSON.parse(skills)));
-  // };
   render() {
-    console.log('dupa :c');
-    // this.getStorage();
     return (
       <Provider store={store}>
         <DrawerExample />

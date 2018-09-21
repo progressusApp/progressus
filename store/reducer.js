@@ -120,7 +120,10 @@ export default function reducer(state = {}, action) {
     case ADD_CATEGORY:
       newState = {
         ...state,
-        skillsCategories: [...state.skillsCategories, { title: action.payload.title, skills: [] }],
+        skillsCategories: [
+          ...state.skillsCategories,
+          { id: state.skillsCategories.length, title: action.payload.title, skills: [] },
+        ],
       };
       updateStorage(newState);
       return newState;

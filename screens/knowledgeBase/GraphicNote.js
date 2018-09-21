@@ -1,16 +1,36 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, Button, TouchableOpacity, Image } from 'react-native';
-import DatePicker from 'react-native-datepicker';
-import ImagePicker from 'react-native-image-picker';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Platform,
+  Picker,
+  ActionSheetIOS,
+  TextInput,
+  Button,
+  TouchableOpacity,
+  Image,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from 'react-native';
 import { RNCamera } from 'react-native-camera';
-
-// import CameraKitCamera from 'react-native-camera-kit';
+import { addNote } from '../../store/actions';
 
 export default class GraphicNote extends React.Component {
   state = {
     noteTitle: '',
+    categoryName: 'Kliknij by wybrać kategorię',
     noteContent: null,
   };
+
+  savePicture = () => {
+    if (this.state.noteContent) {
+      const category = this.props.skillsCategories.filter(skill => skill.title === this.state.categoryName);
+      this.props.addNote(category[0].id, this.state.noteTitle, 'graphic', this.state.noteContent);
+      this.props.navigation.navigate('MainView');
+    }
+  };
+
   takePicture = async function() {
     if (this.camera) {
       const options = { quality: 0.5, base64: true, fixOrientation: true };
@@ -18,45 +38,93 @@ export default class GraphicNote extends React.Component {
       this.setState({ noteContent: data.uri });
     }
   };
+
+  handlePickerChange = categoryName => {
+    this.setState({ categoryName: categoryName });
+  };
+
+  openiOSPicker = () => {
+    const { skillsCategories } = this.props;
+    const skillsOptions = skillsCategories.map(category => category.title);
+    return ActionSheetIOS.showActionSheetWithOptions(
+      {
+        options: [...skillsOptions, 'Cancel'],
+        cancelButtonIndex: skillsOptions.length,
+      },
+      buttonIndex => {
+        this.setState({ categoryName: skillsOptions[buttonIndex] });
+      }
+    );
+  };
+
+  renderiOSPicker = () => {
+    return (
+      <TouchableOpacity onPress={this.openiOSPicker} style={styles.categoryPickeriOS}>
+        <Text>{this.state.categoryName}</Text>
+      </TouchableOpacity>
+    );
+  };
+
+  renderAndroidPicker = () => {
+    const { skillsCategories } = this.props;
+    return (
+      <Picker selectedValue={this.state.categoryName} onValueChange={itemValue => this.handlePickerChange(itemValue)}>
+        {skillsCategories.map(category => (
+          <Picker.Item label={category.title} value={category.title} key={category.id} />
+        ))}
+      </Picker>
+    );
+  };
+
+  renderNativePicker = () => {
+    if (Platform.OS === 'ios') {
+      return this.renderiOSPicker();
+    } else if (Platform.OS === 'android') {
+      return this.renderAndroidPicker();
+    }
+  };
+
   render() {
     return (
-      <View style={styles.container}>
-        <Text style={styles.label}>Tytuł notatki</Text>
-        <TextInput
-          style={styles.input}
-          onChangeText={value => this.setState({ noteTitle: value })}
-          value={this.state.noteTitle}
-          placeholder="Tytuł"
-        />
-        {this.state.noteContent !== null && <Image style={styles.preview} source={{ uri: this.state.noteContent }} />}
-        {this.state.noteContent !== null && (
-          <View>
-            <TouchableOpacity onPress={this.takePicture.bind(this)} style={styles.capture}>
-              <Text style={{ fontSize: 14 }}>Zapisz</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.setState({ noteContent: null })} style={styles.capture}>
-              <Text style={{ fontSize: 14 }}>Nowe zdjęcie</Text>
-            </TouchableOpacity>
-          </View>
-        )}
-        {this.state.noteContent === null && (
-          <RNCamera
-            ref={ref => {
-              this.camera = ref;
-            }}
-            style={styles.preview}
-            type={RNCamera.Constants.Type.back}
-            flashMode={RNCamera.Constants.FlashMode.on}
-            permissionDialogTitle={'Permission to use camera'}
-            permissionDialogMessage={'We need your permission to use your camera phone'}
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <View style={styles.container}>
+          <Text style={styles.label}>Tytuł notatki</Text>
+          <TextInput
+            style={styles.input}
+            onChangeText={value => this.setState({ noteTitle: value })}
+            value={this.state.noteTitle}
+            placeholder="Tytuł"
           />
-        )}
-        {this.state.noteContent === null && (
-          <TouchableOpacity onPress={this.takePicture.bind(this)} style={styles.capture}>
-            <Text style={{ fontSize: 14 }}>Zrób zdjęcie</Text>
-          </TouchableOpacity>
-        )}
-      </View>
+          <Text style={styles.label}>Wybierz kategorię</Text>
+          {this.renderNativePicker()}
+          {this.state.noteContent !== null && <Image style={styles.preview} source={{ uri: this.state.noteContent }} />}
+          {this.state.noteContent !== null && (
+            <View>
+              <TouchableOpacity onPress={this.savePicture} style={styles.capture}>
+                <Text style={{ fontSize: 14 }}>Zapisz</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => this.setState({ noteContent: null })} style={styles.capture}>
+                <Text style={{ fontSize: 14 }}>Nowe zdjęcie</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+          {this.state.noteContent === null && (
+            <RNCamera
+              ref={ref => {
+                this.camera = ref;
+              }}
+              style={styles.preview}
+              type={RNCamera.Constants.Type.back}
+              flashMode={RNCamera.Constants.FlashMode.auto}
+            />
+          )}
+          {this.state.noteContent === null && (
+            <TouchableOpacity onPress={this.takePicture.bind(this)} style={styles.capture}>
+              <Text style={{ fontSize: 14 }}>Zrób zdjęcie</Text>
+            </TouchableOpacity>
+          )}
+        </View>
+      </TouchableWithoutFeedback>
     );
   }
 }
@@ -82,11 +150,6 @@ const styles = StyleSheet.create({
     borderTopWidth: 0.5,
     borderColor: '#c1bcbc',
   },
-  buttonFont: {
-    fontSize: 25,
-    fontWeight: 'bold',
-    color: '#64b5f6',
-  },
   preview: {
     flex: 1,
     justifyContent: 'flex-end',
@@ -109,5 +172,14 @@ const styles = StyleSheet.create({
     borderWidth: 0,
     borderBottomWidth: 0.5,
     borderColor: '#c1bcbc',
+  },
+  categoryPickeriOS: {
+    height: 30,
+    borderWidth: 0,
+    borderBottomWidth: 0.5,
+    borderColor: '#c1bcbc',
+    justifyContent: 'center',
+    marginTop: 10,
+    marginBottom: 15,
   },
 });

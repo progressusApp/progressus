@@ -3,22 +3,14 @@ import {
   StyleSheet,
   Text,
   View,
-  FlatList,
-  TextInput,
   ScrollView,
   TouchableOpacity,
   Button,
-  Dimensions,
-  KeyboardAvoidingView,
   Picker,
-  TouchableHighlight,
+  Platform,
+  ActionSheetIOS,
 } from 'react-native';
-import {
-  createStackNavigator,
-  SafeAreaView,
-  createBottomTabNavigator,
-  createMaterialTopTabNavigator,
-} from 'react-navigation';
+import { createStackNavigator, createMaterialTopTabNavigator } from 'react-navigation';
 import { connect } from 'react-redux';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { Stopwatch } from 'react-native-stopwatch-timer';
@@ -28,7 +20,7 @@ import moment from 'moment';
 
 class TimerScreen extends React.Component {
   state = {
-    categoryName: '',
+    categoryName: 'Kliknij by wybrać kategorię...',
     categorySkills: [],
     skillName: '',
 
@@ -49,15 +41,15 @@ class TimerScreen extends React.Component {
     });
   }
 
-  handlePickerChange = categoryName => {
+  handlePickerChange = (itemName, itemValue) => {
     const { skillsCategories } = this.props;
-    const category = skillsCategories.filter(category => category.title === categoryName);
-    this.setState({ categoryName: categoryName, categorySkills: category[0].skills });
+    if (itemName === 'categoryName') {
+      const category = skillsCategories.filter(category => category.title === itemValue);
+      this.setState({ categoryName: itemValue, categorySkills: category[0].skills, skillName: category[0].skills[0] });
+    } else {
+      this.setState({ [itemName]: itemValue });
+    }
   };
-
-  componentWillUnmount() {
-    console.log('unmount');
-  }
 
   toggleStopwatch = () => {
     this.setState({
@@ -88,6 +80,51 @@ class TimerScreen extends React.Component {
       startTime,
       this.duration
     );
+  };
+
+  openiOSPicker = (collection, itemName) => {
+    let skillsOptions = collection.map(category => category.title);
+    if (skillsOptions.includes(undefined)) {
+      skillsOptions = collection;
+    }
+    return ActionSheetIOS.showActionSheetWithOptions(
+      {
+        options: [...skillsOptions, 'Cancel'],
+        cancelButtonIndex: skillsOptions.length,
+      },
+      buttonIndex => {
+        this.handlePickerChange(itemName, skillsOptions[buttonIndex]);
+      }
+    );
+  };
+
+  renderiOSPicker = (collection, itemName) => {
+    return (
+      <TouchableOpacity onPress={() => this.openiOSPicker(collection, itemName)} style={styles.categoryPickeriOS}>
+        <Text>{this.state[itemName]}</Text>
+      </TouchableOpacity>
+    );
+  };
+
+  renderAndroidPicker = (collection, itemName) => {
+    return (
+      <Picker
+        selectedValue={this.state[itemName]}
+        onValueChange={itemValue => this.handlePickerChange(itemName, itemValue)}
+      >
+        {collection.map((item, index) => (
+          <Picker.Item label={item.title || item} value={item.title || item} key={index} />
+        ))}
+      </Picker>
+    );
+  };
+
+  renderNativePicker = (collection, itemName) => {
+    if (Platform.OS === 'ios') {
+      return this.renderiOSPicker(collection, itemName);
+    } else if (Platform.OS === 'android') {
+      return this.renderAndroidPicker(collection, itemName);
+    }
   };
 
   renderSaveButton = () => {
@@ -126,23 +163,11 @@ class TimerScreen extends React.Component {
           <Text style={styles.info}>Włącz timer aby rejestrować czas poświęcony na rozwój danej umiejętności</Text>
         </View>
         <Text style={styles.label}>Wybierz kategorię</Text>
-        {/* {console.log('timer records ', this.props.timerRecords)} */}
-        <Picker selectedValue={this.state.categoryName} onValueChange={itemValue => this.handlePickerChange(itemValue)}>
-          {this.props.skillsCategories.map(category => (
-            <Picker.Item label={category.title} value={category.title} key={category.id} />
-          ))}
-        </Picker>
+        {this.renderNativePicker(this.props.skillsCategories, 'categoryName')}
         <View>
           <Text style={styles.label}>Wybierz umiejętność</Text>
-          <Picker
-            selectedValue={this.state.skillName}
-            onValueChange={itemValue => this.setState({ skillName: itemValue })}
-          >
-            {this.state.categorySkills.map((skill, index) => <Picker.Item label={skill} value={skill} key={index} />)}
-          </Picker>
+          {this.renderNativePicker(this.state.categorySkills, 'skillName')}
         </View>
-        {/* )} */}
-        {/* <Text>{this.state.time}</Text> */}
         <Stopwatch
           laps
           start={this.state.stopwatchStart}
@@ -193,10 +218,16 @@ const TimerStack = createStackNavigator({
     screen: createMaterialTopTabNavigator(
       {
         Timer: {
-          screen: connect(mapStateToProps, mapDispatchToProps)(TimerScreen),
+          screen: connect(
+            mapStateToProps,
+            mapDispatchToProps
+          )(TimerScreen),
         },
         Lista: {
-          screen: connect(mapStateToProps, mapDispatchToProps)(TimerList),
+          screen: connect(
+            mapStateToProps,
+            mapDispatchToProps
+          )(TimerList),
         },
       },
       {
@@ -251,5 +282,14 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     width: 200,
     justifyContent: 'space-around',
+  },
+  categoryPickeriOS: {
+    height: 30,
+    borderWidth: 0,
+    borderBottomWidth: 0.5,
+    borderColor: '#c1bcbc',
+    justifyContent: 'center',
+    marginTop: 10,
+    marginBottom: 15,
   },
 });
