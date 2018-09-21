@@ -1,9 +1,22 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, Button, Picker } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  Button,
+  Picker,
+  Platform,
+  ActionSheetIOS,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  Keyboard,
+  TouchableWithoutFeedback,
+} from 'react-native';
 
 export default class TextNote extends React.Component {
   state = {
-    categoryName: '',
+    categoryName: 'Kliknij by wybrać kategorię...',
     noteContent: '',
     noteTitle: '',
   };
@@ -13,42 +26,82 @@ export default class TextNote extends React.Component {
   };
 
   addNote = () => {
-    console.log('category name ', this.state.categoryName);
-    // console.log('category name ', this.state.categoryName)
     const category = this.props.skillsCategories.filter(skill => skill.title === this.state.categoryName);
     this.props.addNote(category[0].id, this.state.noteTitle, 'text', this.state.noteContent);
+    this.props.navigation.navigate('MainView');
+  };
+
+  openiOSPicker = () => {
+    const { skillsCategories } = this.props;
+    const skillsOptions = skillsCategories.map(category => category.title);
+    return ActionSheetIOS.showActionSheetWithOptions(
+      {
+        options: [...skillsOptions, 'Cancel'],
+        cancelButtonIndex: skillsOptions.length,
+      },
+      buttonIndex => {
+        this.setState({ categoryName: skillsOptions[buttonIndex] });
+      }
+    );
+  };
+
+  renderiOSPicker = () => {
+    return (
+      <TouchableOpacity onPress={this.openiOSPicker} style={styles.categoryPickeriOS}>
+        <Text>{this.state.categoryName}</Text>
+      </TouchableOpacity>
+    );
+  };
+
+  renderAndroidPicker = () => {
+    const { skillsCategories } = this.props;
+    return (
+      <Picker selectedValue={this.state.categoryName} onValueChange={itemValue => this.handlePickerChange(itemValue)}>
+        {skillsCategories.map(category => (
+          <Picker.Item label={category.title} value={category.title} key={category.id} />
+        ))}
+      </Picker>
+    );
+  };
+
+  renderNativePicker = () => {
+    if (Platform.OS === 'ios') {
+      return this.renderiOSPicker();
+    } else if (Platform.OS === 'android') {
+      return this.renderAndroidPicker();
+    }
   };
 
   render() {
     const { skillsCategories } = this.props;
     return (
-      <View style={styles.container}>
-        <Text style={styles.label}>Treść</Text>
-        <TextInput
-          style={styles.textInput}
-          onChangeText={value => this.setState({ noteContent: value })}
-          value={this.state.noteContent}
-          multiline={true}
-          underlineColorAndroid="transparent"
-          placeholder="Zacznij pisać..."
-        />
-        <Text style={styles.label}>Wybierz kategorię</Text>
-        <Picker selectedValue={this.state.categoryName} onValueChange={itemValue => this.handlePickerChange(itemValue)}>
-          {skillsCategories.map(category => (
-            <Picker.Item label={category.title} value={category.title} key={category.id} />
-          ))}
-        </Picker>
-        <Text style={styles.label}>Tytuł notatki</Text>
-        <TextInput
-          style={styles.input}
-          onChangeText={value => this.setState({ noteTitle: value })}
-          value={this.state.noteTitle}
-          placeholder="Tytuł"
-        />
-        <View style={styles.button}>
-          <Button onPress={() => this.addNote()} title="Dodaj" />
-        </View>
-      </View>
+      <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }} keyboardVerticalOffset={-64}>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+          <View style={styles.container}>
+            <Text style={styles.label}>Treść</Text>
+            <TextInput
+              style={styles.textInput}
+              onChangeText={value => this.setState({ noteContent: value })}
+              value={this.state.noteContent}
+              multiline={true}
+              underlineColorAndroid="transparent"
+              placeholder="Zacznij pisać..."
+            />
+            <Text style={styles.label}>Wybierz kategorię</Text>
+            {this.renderNativePicker()}
+            <Text style={styles.label}>Tytuł notatki</Text>
+            <TextInput
+              style={styles.input}
+              onChangeText={value => this.setState({ noteTitle: value })}
+              value={this.state.noteTitle}
+              placeholder="Tytuł"
+            />
+            <View style={styles.button}>
+              <Button onPress={() => this.addNote()} title="Dodaj" />
+            </View>
+          </View>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
     );
   }
 }
@@ -66,19 +119,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: 'bold',
   },
-  button: {
-    flex: 0.33,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 0,
-    borderTopWidth: 0.5,
-    borderColor: '#c1bcbc',
-  },
-  buttonFont: {
-    fontSize: 25,
-    fontWeight: 'bold',
-    color: '#64b5f6',
-  },
   textInput: {
     flex: 0.6,
     borderColor: '#c1bcbc',
@@ -92,7 +132,7 @@ const styles = StyleSheet.create({
   },
   button: {
     alignSelf: 'stretch',
-    marginTop: 50,
+    marginTop: 30,
   },
   input: {
     padding: 10,
@@ -101,5 +141,14 @@ const styles = StyleSheet.create({
     borderWidth: 0,
     borderBottomWidth: 0.5,
     borderColor: '#c1bcbc',
+  },
+  categoryPickeriOS: {
+    height: 30,
+    borderWidth: 0,
+    borderBottomWidth: 0.5,
+    borderColor: '#c1bcbc',
+    justifyContent: 'center',
+    marginTop: 10,
+    marginBottom: 15,
   },
 });

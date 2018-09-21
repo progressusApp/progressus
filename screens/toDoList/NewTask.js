@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Button, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import DatePicker from 'react-native-datepicker';
 import moment from 'moment';
 
@@ -14,50 +14,53 @@ export default class NewTask extends React.Component {
   addTask = () => {
     const { addTask } = this.props;
     const { taskContent, date } = this.state;
-    addTask({ taskContent, date, done: false });
+
+    addTask({ content: taskContent, date, done: false });
     this.props.navigation.navigate('MainView');
   };
 
   render() {
     const { taskContent, date } = this.state;
     return (
-      <View style={styles.container}>
-        <Text style={styles.label}>Co masz do zrobienia?</Text>
-        <TextInput
-          style={styles.input}
-          onChangeText={value => this.setState({ taskContent: value })}
-          value={taskContent}
-          multiline={true}
-        />
-        <Text style={styles.label}>Termin zakończenia</Text>
-        <DatePicker
-          style={{ width: 300 }}
-          date={date}
-          mode="datetime"
-          placeholder="Wybierz datę"
-          confirmBtnText="Potwierdź"
-          cancelBtnText="Anuluj"
-          customStyles={{
-            dateIcon: {
-              position: 'absolute',
-              right: 0,
-              top: 4,
-              marginLeft: 0,
-            },
-            dateInput: {
-              marginRight: 40,
-              borderWidth: 0,
-              borderBottomWidth: 1,
-            },
-          }}
-          onDateChange={date => {
-            this.setState({ date: date });
-          }}
-        />
-        <View style={styles.button}>
-          <Button onPress={() => this.addTask()} title="Dodaj" />
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <View style={styles.container}>
+          <Text style={styles.label}>Co masz do zrobienia?</Text>
+          <TextInput
+            style={styles.input}
+            onChangeText={value => this.setState({ taskContent: value })}
+            value={taskContent}
+            multiline={true}
+          />
+          <Text style={styles.label}>Termin zakończenia</Text>
+          <DatePicker
+            style={{ width: 300 }}
+            date={date}
+            mode="datetime"
+            placeholder="Wybierz datę"
+            confirmBtnText="Potwierdź"
+            cancelBtnText="Anuluj"
+            customStyles={{
+              dateIcon: {
+                position: 'absolute',
+                right: 0,
+                top: 4,
+                marginLeft: 0,
+              },
+              dateInput: {
+                marginRight: 40,
+                borderWidth: 0,
+                borderBottomWidth: 1,
+              },
+            }}
+            onDateChange={date => {
+              this.setState({ date: date });
+            }}
+          />
+          <View style={styles.button}>
+            <Button onPress={() => this.addTask()} title="Dodaj" />
+          </View>
         </View>
-      </View>
+      </TouchableWithoutFeedback>
     );
   }
 }

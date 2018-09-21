@@ -8,6 +8,23 @@ export const ADD_TIMER_RECORD = 'timer/addTimerRecord';
 export const DELETE_TIMER_RECORD = 'timer/deleteTimerRecord';
 export const ADD_NOTE = 'knowlegdeBase/addNote';
 export const DELETE_NOTE = 'knowlegdeBase/deleteNote';
+export const GET_STORAGE_DATA = 'GET_STORAGE_DATA';
+export const SET_DATA_STORAGE = 'SET_DATA_STORAGE';
+
+export function getDataFromStorage(data) {
+  return {
+    type: GET_STORAGE_DATA,
+    payload: {
+      data: data,
+    },
+  };
+}
+
+export function setDataStorage(data) {
+  return {
+    type: SET_DATA_STORAGE,
+  };
+}
 
 export function addTask(task) {
   return {

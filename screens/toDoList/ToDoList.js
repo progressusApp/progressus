@@ -1,6 +1,6 @@
 import React from 'react';
-import { StyleSheet, Text, View, FlatList, TextInput, ScrollView, TouchableOpacity } from 'react-native';
-import { createStackNavigator, SafeAreaView } from 'react-navigation';
+import { StyleSheet, Text, View, FlatList, ScrollView, AsyncStorage } from 'react-native';
+import { createStackNavigator } from 'react-navigation';
 import Icon from 'react-native-vector-icons/Feather';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { CheckBox } from 'react-native-elements';
@@ -44,9 +44,6 @@ class ToDoListScreen extends React.Component {
             keyExtractor={this.keyExtractor}
           />
         </ScrollView>
-        <TouchableOpacity onPress={() => this.props.navigation.navigate('NewTaskView')} style={styles.newTaskButton}>
-          <MaterialIcons name="add" size={30} />
-        </TouchableOpacity>
       </View>
     );
   }
@@ -54,6 +51,7 @@ class ToDoListScreen extends React.Component {
 
 const mapStateToProps = state => ({
   tasks: state.toDoTasks,
+  state: state,
 });
 
 const mapDispatchToProps = {
@@ -63,16 +61,30 @@ const mapDispatchToProps = {
 
 const ToDoListStack = createStackNavigator({
   MainView: {
-    screen: connect(mapStateToProps, mapDispatchToProps)(ToDoListScreen),
+    screen: connect(
+      mapStateToProps,
+      mapDispatchToProps
+    )(ToDoListScreen),
     navigationOptions: ({ navigation }) => ({
       title: 'Lista "to do"',
       headerLeft: (
         <MaterialIcons name="menu" size={30} style={{ marginLeft: 15 }} onPress={() => navigation.openDrawer()} />
       ),
+      headerRight: (
+        <MaterialIcons
+          name="add"
+          size={30}
+          style={{ marginRight: 15 }}
+          onPress={() => navigation.navigate('NewTaskView')}
+        />
+      ),
     }),
   },
   NewTaskView: {
-    screen: connect(mapStateToProps, mapDispatchToProps)(NewTaskView),
+    screen: connect(
+      mapStateToProps,
+      mapDispatchToProps
+    )(NewTaskView),
     navigationOptions: ({ navigation }) => ({
       title: 'Nowe zadanie',
       headerLeft: (
@@ -83,14 +95,6 @@ const ToDoListStack = createStackNavigator({
           onPress={() => navigation.navigate('MainView')}
         />
       ),
-      // headerRight: (
-      //   <MaterialIcons
-      //     name="check"
-      //     size={30}
-      //     style={{ marginRight: 15 }}
-      //     onPress={data => navigation.navigate('MainView')}
-      //   />
-      // ),
     }),
   },
 });
@@ -122,18 +126,5 @@ const styles = StyleSheet.create({
   },
   taskLabel: {
     marginLeft: 10,
-  },
-  newTaskButton: {
-    backgroundColor: '#64b5f6',
-    width: 60,
-    height: 60,
-    borderRadius: 100 / 2,
-    position: 'absolute',
-    right: 0,
-    bottom: 0,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 30,
-    marginBottom: 30,
   },
 });
