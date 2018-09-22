@@ -1,10 +1,15 @@
 import React from 'react';
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image, Button } from 'react-native';
 import { createStackNavigator } from 'react-navigation';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import EntypoIcons from 'react-native-vector-icons/Entypo';
+// import bubblesort from 'bubblesort';
 
 class NotesView extends React.Component {
+  state = {
+    sorted: false,
+  };
+
   renderNotePreview = (content, contentType) => {
     if (contentType === 'text') {
       return <Text>{content.substring(0, 50)}...</Text>;
@@ -13,17 +18,69 @@ class NotesView extends React.Component {
     }
   };
 
+  compareTitle = (a, b) => {
+    if (a.title < b.title) {
+      return -1;
+    } else if (a.title > b.title) {
+      return 1;
+    }
+    return 0;
+  };
+
+  bubblesort = (arr, cmp) => {
+    cmp = cmp || comparator;
+    var temp;
+    for (var i = 0, l = arr.length; i < l; i++) {
+      for (var j = i; j > 0; j--) {
+        if (cmp(arr[j], arr[j - 1]) < 0) {
+          temp = arr[j];
+          arr[j] = arr[j - 1];
+          arr[j - 1] = temp;
+        }
+      }
+    }
+    return arr;
+  };
+
+  sortByTitle = notes => {
+    return this.bubblesort(notes, this.compareTitle);
+  };
+
+  getCollectionToDisplay = notes => {
+    if (this.state.sorted) {
+      console.time('sortByTitle');
+      const sortedValues = this.sortByTitle(notes);
+      console.timeEnd('sortByTitle');
+      return sortedValues;
+    } else {
+      return notes;
+    }
+  };
+
   render() {
+    console.log('notes view');
     const categoryID = this.props.navigation.getParam('categoryID');
     const categoryName = this.props.navigation.getParam('categoryName');
-    console.log('notes', notes);
     const notes = this.props.notes.filter(note => note.categoryID === categoryID);
+    const listToDisplay = notes.slice(0, 200);
+    this.getCollectionToDisplay(notes);
+    console.log('listToDisplay ', listToDisplay[0]);
+    console.log('listToDisplay ', listToDisplay.length);
     return (
       <View style={styles.container}>
-        <Text style={styles.header}>{categoryName}</Text>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginBottom: 20,
+          }}
+        >
+          <Text style={styles.header}>{categoryName}</Text>
+          <Button title="Sortuj po tytule" onPress={() => this.setState({ sorted: true })} />
+        </View>
         <ScrollView>
           <View style={styles.notesWrapper}>
-            {notes.map(note => (
+            {listToDisplay.map(note => (
               <View style={styles.note} key={note.id}>
                 <TouchableOpacity
                   onPress={() => this.props.navigation.navigate('NotePreview', { note })}
@@ -97,7 +154,7 @@ const styles = StyleSheet.create({
     fontSize: 22,
     color: '#64b5f6',
     fontWeight: 'bold',
-    marginBottom: 20,
+
     marginLeft: 20,
   },
 });
