@@ -16,6 +16,7 @@ class NotesView extends React.Component {
   render() {
     const categoryID = this.props.navigation.getParam('categoryID');
     const categoryName = this.props.navigation.getParam('categoryName');
+    console.log('notes', notes);
     const notes = this.props.notes.filter(note => note.categoryID === categoryID);
     return (
       <View style={styles.container}>

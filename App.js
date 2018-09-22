@@ -12,14 +12,27 @@ import SkillsStack from './screens/Skills';
 import TimerStack from './screens/Timer';
 import KnowledgeBaseStack from './screens/knowledgeBase/KnowledgeBase';
 import { toDoTasks, skillsCategories, timerRecords, notes } from './mockupData.js';
+import { data } from './dataGenerator';
+import randomWords from 'random-words';
 
 const store = createStore(reducer);
 
 console.disableYellowBox = true;
 
 export default class App extends React.Component {
+  generateData = () => {
+    let data = [];
+    for (let i = 0; i < 100; i++) {
+      const title = randomWords(2).join(' ');
+      const content = randomWords(20).join(' ');
+      data.push({ id: i, categoryID: 0, title: title, contentType: 'text', content: content });
+    }
+    return data;
+  };
   componentWillMount() {
     let sampleData = {};
+    console.log('data from generator ');
+
     // AsyncStorage.clear();
     AsyncStorage.getItem('@toDoTasks').then(tasks => {
       sampleData = JSON.parse(tasks);
@@ -31,16 +44,18 @@ export default class App extends React.Component {
         store.dispatch(getDataFromStorage({ toDoTasks, skillsCategories, timerRecords, notes }));
       } else {
         let promises = [];
-        AsyncStorage.getItem('@toDoTasks').then(tasks => console.log('seriously I found data ', tasks));
+        AsyncStorage.getItem('@toDoTasks').then(tasks => console.log('seriously I found dataaaa ', tasks));
         promises.push(AsyncStorage.getItem('@toDoTasks'));
         promises.push(AsyncStorage.getItem('@skillsCategories'));
         promises.push(AsyncStorage.getItem('@timerRecords'));
         promises.push(AsyncStorage.getItem('@notes'));
         Promise.all(promises).then(response => {
           const tasks = JSON.parse(response[0]);
+          console.log('tasks ', tasks);
           const skills = JSON.parse(response[1]);
           const records = JSON.parse(response[2]);
-          const notesStorage = JSON.parse(response[3]);
+          const notesStorage = this.generateData();
+          console.log('notesStorage ', notesStorage);
           store.dispatch(
             getDataFromStorage({
               toDoTasks: tasks,

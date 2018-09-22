@@ -12,6 +12,7 @@ export const GET_STORAGE_DATA = 'GET_STORAGE_DATA';
 export const SET_DATA_STORAGE = 'SET_DATA_STORAGE';
 
 export function getDataFromStorage(data) {
+  console.log('getDataFromStorage ', data);
   return {
     type: GET_STORAGE_DATA,
     payload: {

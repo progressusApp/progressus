@@ -34,6 +34,7 @@ class TimerScreen extends React.Component {
   };
 
   componentDidMount() {
+    console.log('componentDidMount ', this.props);
     this.setState({
       categoryName: this.props.skillsCategories[0].title,
       categorySkills: this.props.skillsCategories[0].skills,

@@ -48,7 +48,7 @@ class KnowledgeBaseScreen extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  // notes: state.notes,
+  notes: state.notes,
   skillsCategories: state.skillsCategories,
 });
 
