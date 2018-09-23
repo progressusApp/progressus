@@ -1,19 +1,14 @@
 import React from 'react';
 import { Text, View, AsyncStorage } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { createDrawerNavigator } from 'react-navigation-drawer';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import reducer from './store/reducer';
 import { getDataFromStorage, setDataStorage } from './store/actions';
-import MainViewStack from './MainView';
-import ToDoListStack from './screens/toDoList/ToDoList';
-import SkillsStack from './screens/Skills';
-import TimerStack from './screens/Timer';
-import KnowledgeBaseStack from './screens/knowledgeBase/KnowledgeBase';
-import { toDoTasks, skillsCategories, timerRecords } from './mockupData.js';
-import { data } from './dataGenerator';
+import { toDoTasks, skillsCategories, timerRecords, notes } from './mockupData.js';
+// import { data } from './dataGenerator';
 import randomWords from 'random-words';
+import { DrawerNavigator } from './navigation/MainDrawerNavigation';
 
 const store = createStore(reducer);
 
@@ -33,53 +28,52 @@ export default class App extends React.Component {
   componentWillMount() {
     let sampleData = {};
 
-    console.log('start');
-    AsyncStorage.setItem('@toDoTasks', JSON.stringify(toDoTasks));
-    AsyncStorage.setItem('@skillsCategories', JSON.stringify(skillsCategories));
-    AsyncStorage.setItem('@timerRecords', JSON.stringify(timerRecords));
-    const notes = this.generateData();
-    AsyncStorage.setItem('@notes', JSON.stringify(notes));
-    store.dispatch(getDataFromStorage({ toDoTasks, skillsCategories, timerRecords, notes }));
-    console.log('stop');
+    // console.log('start');
+    // AsyncStorage.setItem('@toDoTasks', JSON.stringify(toDoTasks));
+    // AsyncStorage.setItem('@skillsCategories', JSON.stringify(skillsCategories));
+    // AsyncStorage.setItem('@timerRecords', JSON.stringify(timerRecords));
+    // AsyncStorage.setItem('@notes', JSON.stringify(notes));
+    // store.dispatch(getDataFromStorage({ toDoTasks, skillsCategories, timerRecords, notes }));
+    // console.log('stop');
 
-    // AsyncStorage.clear();
-    // AsyncStorage.getItem('@toDoTasks').then(tasks => {
-    //   sampleData = JSON.parse(tasks);
-    //   console.log('cokolwiek');
-    //   if (!sampleData) {
-    //     console.log('!sampleData ');
-    //
-    //     AsyncStorage.setItem('@toDoTasks', JSON.stringify(toDoTasks));
-    //     AsyncStorage.setItem('@skillsCategories', JSON.stringify(skillsCategories));
-    //     AsyncStorage.setItem('@timerRecords', JSON.stringify(timerRecords));
-    //     AsyncStorage.setItem('@notes', JSON.stringify(notes));
-    //     store.dispatch(getDataFromStorage({ toDoTasks, skillsCategories, timerRecords, notes }));
-    //   } else {
-    //     let promises = [];
-    //     console.log('I found some data');
-    //     AsyncStorage.getItem('@toDoTasks').then(tasks => console.log('seriously I found dataaaa ', tasks));
-    //     promises.push(AsyncStorage.getItem('@toDoTasks'));
-    //     promises.push(AsyncStorage.getItem('@skillsCategories'));
-    //     promises.push(AsyncStorage.getItem('@timerRecords'));
-    //     promises.push(AsyncStorage.getItem('@notes'));
-    //     Promise.all(promises).then(response => {
-    //       const tasks = JSON.parse(response[0]);
-    //       console.log('tasks ', tasks);
-    //       const skills = JSON.parse(response[1]);
-    //       const records = JSON.parse(response[2]);
-    //       const notesStorage = this.generateData();
-    //       console.log('notesStorage ', notesStorage);
-    //       store.dispatch(
-    //         getDataFromStorage({
-    //           toDoTasks: tasks,
-    //           skillsCategories: skills,
-    //           timerRecords: records,
-    //           notes: notesStorage,
-    //         })
-    //       );
-    //     });
-    //   }
-    // });
+    AsyncStorage.clear();
+    AsyncStorage.getItem('@toDoTasks').then(tasks => {
+      sampleData = JSON.parse(tasks);
+      console.log('cokolwiek');
+      if (!sampleData) {
+        console.log('!sampleData ');
+
+        AsyncStorage.setItem('@toDoTasks', JSON.stringify(toDoTasks));
+        AsyncStorage.setItem('@skillsCategories', JSON.stringify(skillsCategories));
+        AsyncStorage.setItem('@timerRecords', JSON.stringify(timerRecords));
+        AsyncStorage.setItem('@notes', JSON.stringify(notes));
+        store.dispatch(getDataFromStorage({ toDoTasks, skillsCategories, timerRecords, notes }));
+      } else {
+        let promises = [];
+        console.log('I found some data');
+        AsyncStorage.getItem('@toDoTasks').then(tasks => console.log('seriously I found dataaaa ', tasks));
+        promises.push(AsyncStorage.getItem('@toDoTasks'));
+        promises.push(AsyncStorage.getItem('@skillsCategories'));
+        promises.push(AsyncStorage.getItem('@timerRecords'));
+        promises.push(AsyncStorage.getItem('@notes'));
+        Promise.all(promises).then(response => {
+          const tasks = JSON.parse(response[0]);
+          console.log('tasks ', tasks);
+          const skills = JSON.parse(response[1]);
+          const records = JSON.parse(response[2]);
+          const notesStorage = this.generateData();
+          console.log('notesStorage ', notesStorage);
+          store.dispatch(
+            getDataFromStorage({
+              toDoTasks: tasks,
+              skillsCategories: skills,
+              timerRecords: records,
+              notes: notesStorage,
+            })
+          );
+        });
+      }
+    });
   }
 
   componentWillUnmount() {
@@ -94,44 +88,8 @@ export default class App extends React.Component {
     console.log('store ', store.getState());
     return (
       <Provider store={store}>
-        <DrawerExample />
+        <DrawerNavigator />
       </Provider>
     );
   }
 }
-
-const DrawerExample = createDrawerNavigator(
-  {
-    Home: {
-      path: '/main',
-      screen: MainViewStack,
-    },
-    ToDoList: {
-      path: '/todo',
-      screen: ToDoListStack,
-    },
-    Skills: {
-      path: '/skills',
-      screen: SkillsStack,
-    },
-    Timer: {
-      path: '/timer',
-      screen: TimerStack,
-    },
-    Base: {
-      path: '/path',
-      screen: KnowledgeBaseStack,
-    },
-  },
-  {
-    initialRouteName: 'Home',
-    drawerWidth: 210,
-    contentOptions: {
-      activeTintColor: '#e91e63',
-    },
-  }
-);
-
-DrawerExample.navigationOptions = {
-  header: null,
-};

@@ -10,15 +10,13 @@ import {
   Platform,
   ActionSheetIOS,
 } from 'react-native';
-import { createStackNavigator, createMaterialTopTabNavigator } from 'react-navigation';
 import { connect } from 'react-redux';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { Stopwatch } from 'react-native-stopwatch-timer';
 import TimerList from './TimerList';
-import { addTimerRecord, deleteTimerRecord } from '../store/actions';
+import { addTimerRecord } from '../store/actions';
 import moment from 'moment';
 
-class TimerScreen extends React.Component {
+class TimerView extends React.Component {
   state = {
     categoryName: 'Kliknij by wybrać kategorię...',
     categorySkills: [],
@@ -34,7 +32,6 @@ class TimerScreen extends React.Component {
   };
 
   componentDidMount() {
-    console.log('componentDidMount ', this.props);
     this.setState({
       categoryName: this.props.skillsCategories[0].title,
       categorySkills: this.props.skillsCategories[0].skills,
@@ -209,55 +206,14 @@ const options = {
 
 const mapStateToProps = state => ({
   skillsCategories: state.skillsCategories,
-  timerRecords: state.timerRecords,
 });
 
-const mapDispatchToProps = { addTimerRecord, deleteTimerRecord };
+const mapDispatchToProps = { addTimerRecord };
 
-const TimerStack = createStackNavigator({
-  MainView: {
-    screen: createMaterialTopTabNavigator(
-      {
-        Timer: {
-          screen: connect(
-            mapStateToProps,
-            mapDispatchToProps
-          )(TimerScreen),
-        },
-        Lista: {
-          screen: connect(
-            mapStateToProps,
-            mapDispatchToProps
-          )(TimerList),
-        },
-      },
-      {
-        tabBarOptions: {
-          labelStyle: {
-            color: '#64b5f6',
-            fontWeight: 'bold',
-          },
-          style: {
-            backgroundColor: '#fff',
-          },
-        },
-      }
-    ),
-    navigationOptions: ({ navigation }) => ({
-      title: 'Timer',
-      headerLeft: (
-        <MaterialIcons name="menu" size={30} style={{ marginLeft: 15 }} onPress={() => navigation.openDrawer()} />
-      ),
-    }),
-  },
-});
-
-TimerStack.navigationOptions = {
-  drawerLabel: 'Timer',
-  drawerIcon: ({ tintColor }) => <MaterialIcons name="timer" size={24} style={{ color: tintColor }} />,
-};
-
-export default TimerStack;
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(TimerView);
 
 const styles = StyleSheet.create({
   container: {

@@ -15,8 +15,9 @@ import {
 } from 'react-native';
 import { RNCamera } from 'react-native-camera';
 import { addNote } from '../../store/actions';
+import { connect } from 'react-redux';
 
-export default class GraphicNote extends React.Component {
+class GraphicNoteView extends React.Component {
   state = {
     noteTitle: '',
     categoryName: 'Kliknij by wybrać kategorię',
@@ -128,6 +129,17 @@ export default class GraphicNote extends React.Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  skillsCategories: state.skillsCategories,
+});
+
+const mapDispatchToProps = { addNote };
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(GraphicNoteView);
 
 const styles = StyleSheet.create({
   container: {

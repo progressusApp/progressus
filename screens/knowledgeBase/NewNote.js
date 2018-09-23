@@ -8,9 +8,6 @@ export default class NewNote extends React.Component {
         <TouchableOpacity onPress={() => this.props.navigation.navigate('TextNote')} style={styles.button}>
           <Text style={styles.buttonFont}>NOTATKA TEKSTOWA</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => this.props.navigation.navigate('AudioNote')} style={styles.button}>
-          <Text style={styles.buttonFont}>NOTATKA GŁOSOWA</Text>
-        </TouchableOpacity>
         <TouchableOpacity onPress={() => this.props.navigation.navigate('GraphicNote')} style={styles.button}>
           <Text style={styles.buttonFont}>NOTATKA GRAFICZNA</Text>
         </TouchableOpacity>
@@ -25,7 +22,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   button: {
-    flex: 0.33,
+    flex: 0.5,
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 0,

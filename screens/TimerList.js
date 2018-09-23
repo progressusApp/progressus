@@ -3,8 +3,10 @@ import { StyleSheet, Text, View, ScrollView, TouchableOpacity } from 'react-nati
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import EntypoIcons from 'react-native-vector-icons/Entypo';
 import Accordion from 'react-native-collapsible/Accordion';
+import { connect } from 'react-redux';
+import { deleteTimerRecord } from '../store/actions';
 
-export default class TimerList extends React.Component {
+class TimerList extends React.Component {
   state = {
     collapsed: true,
     activeSection: false,
@@ -76,6 +78,17 @@ export default class TimerList extends React.Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  timerRecords: state.timerRecords,
+});
+
+const mapDispatchToProps = { deleteTimerRecord };
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(TimerList);
 
 const styles = StyleSheet.create({
   container: {

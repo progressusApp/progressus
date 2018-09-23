@@ -13,8 +13,10 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
 } from 'react-native';
+import { addNote } from '../../store/actions';
+import { connect } from 'react-redux';
 
-export default class TextNote extends React.Component {
+class TextNoteView extends React.Component {
   state = {
     categoryName: 'Kliknij by wybrać kategorię...',
     noteContent: '',
@@ -75,36 +77,47 @@ export default class TextNote extends React.Component {
   render() {
     const { skillsCategories } = this.props;
     return (
-      <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }} keyboardVerticalOffset={-64}>
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-          <View style={styles.container}>
-            <Text style={styles.label}>Treść</Text>
-            <TextInput
-              style={styles.textInput}
-              onChangeText={value => this.setState({ noteContent: value })}
-              value={this.state.noteContent}
-              multiline={true}
-              underlineColorAndroid="transparent"
-              placeholder="Zacznij pisać..."
-            />
-            <Text style={styles.label}>Wybierz kategorię</Text>
-            {this.renderNativePicker()}
-            <Text style={styles.label}>Tytuł notatki</Text>
-            <TextInput
-              style={styles.input}
-              onChangeText={value => this.setState({ noteTitle: value })}
-              value={this.state.noteTitle}
-              placeholder="Tytuł"
-            />
-            <View style={styles.button}>
-              <Button onPress={() => this.addNote()} title="Dodaj" />
-            </View>
+      // <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <View style={styles.container}>
+          <Text style={styles.label}>Treść</Text>
+          <TextInput
+            style={styles.textInput}
+            onChangeText={value => this.setState({ noteContent: value })}
+            value={this.state.noteContent}
+            multiline={true}
+            underlineColorAndroid="transparent"
+            placeholder="Zacznij pisać..."
+          />
+          <Text style={styles.label}>Wybierz kategorię</Text>
+          {this.renderNativePicker()}
+          <Text style={styles.label}>Tytuł notatki</Text>
+          <TextInput
+            style={styles.input}
+            onChangeText={value => this.setState({ noteTitle: value })}
+            value={this.state.noteTitle}
+            placeholder="Tytuł"
+          />
+          <View style={styles.button}>
+            <Button onPress={() => this.addNote()} title="Dodaj" />
           </View>
-        </TouchableWithoutFeedback>
-      </KeyboardAvoidingView>
+        </View>
+      </TouchableWithoutFeedback>
+      // </KeyboardAvoidingView>
     );
   }
 }
+
+const mapStateToProps = state => ({
+  skillsCategories: state.skillsCategories,
+});
+
+const mapDispatchToProps = { addNote };
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(TextNoteView);
 
 const styles = StyleSheet.create({
   container: {
@@ -120,7 +133,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   textInput: {
-    flex: 0.6,
+    height: 150,
     borderColor: '#c1bcbc',
     borderWidth: 0.5,
     alignItems: 'flex-end',

@@ -10,14 +10,13 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
-import { createStackNavigator } from 'react-navigation';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import EntypoIcons from 'react-native-vector-icons/Entypo';
 import { connect } from 'react-redux';
 import { addCategory, addSkill, deleteSkill, deleteCategory } from '../store/actions';
 import Accordion from 'react-native-collapsible/Accordion';
 
-class SkillsScreen extends React.Component {
+class SkillsView extends React.Component {
   state = {
     activeSection: false,
     newCategoryName: '',
@@ -153,27 +152,10 @@ const mapDispatchToProps = {
   deleteCategory,
 };
 
-const SkillsStack = createStackNavigator({
-  MainView: {
-    screen: connect(
-      mapStateToProps,
-      mapDispatchToProps
-    )(SkillsScreen),
-    navigationOptions: ({ navigation }) => ({
-      title: 'Lista umiejętności',
-      headerLeft: (
-        <MaterialIcons name="menu" size={30} style={{ marginLeft: 15 }} onPress={() => navigation.openDrawer()} />
-      ),
-    }),
-  },
-});
-
-SkillsStack.navigationOptions = {
-  drawerLabel: 'Lista umiejętności',
-  drawerIcon: ({ tintColor }) => <MaterialIcons name="list" size={24} style={{ color: tintColor }} />,
-};
-
-export default SkillsStack;
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SkillsView);
 
 const styles = StyleSheet.create({
   container: {

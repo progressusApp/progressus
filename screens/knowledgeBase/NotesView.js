@@ -3,7 +3,8 @@ import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image, Button } f
 import { createStackNavigator } from 'react-navigation';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import EntypoIcons from 'react-native-vector-icons/Entypo';
-// import bubblesort from 'bubblesort';
+import { connect } from 'react-redux';
+import { deleteNote } from '../../store/actions';
 
 class NotesView extends React.Component {
   state = {
@@ -101,26 +102,16 @@ class NotesView extends React.Component {
   }
 }
 
-const NotesViewStack = createStackNavigator({
-  NotesView: {
-    screen: NotesView,
-    navigationOptions: ({ navigation }) => {
-      return {
-        title: 'Notatki',
-        headerLeft: (
-          <MaterialIcons name="arrow-back" size={30} style={{ marginLeft: 15 }} onPress={() => navigation.goBack()} />
-        ),
-      };
-    },
-  },
+const mapStateToProps = state => ({
+  notes: state.notes,
 });
 
-NotesViewStack.navigationOptions = {
-  drawerLabel: 'Baza wiedzy',
-  drawerIcon: ({ tintColor }) => <EntypoIcons name="open-book" size={24} style={{ color: tintColor }} />,
-};
+const mapDispatchToProps = { deleteNote };
 
-export default NotesView;
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(NotesView);
 
 const styles = StyleSheet.create({
   container: {

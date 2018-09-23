@@ -1,14 +1,10 @@
 import React from 'react';
 import { StyleSheet, Text, View, FlatList, ScrollView, AsyncStorage } from 'react-native';
-import { createStackNavigator } from 'react-navigation';
-import Icon from 'react-native-vector-icons/Feather';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { CheckBox } from 'react-native-elements';
-import NewTaskView from './NewTask';
 import { connect } from 'react-redux';
-import { addTask, updateTaskCheck } from '../../store/actions';
+import { updateTaskCheck } from '../../store/actions';
 
-class ToDoListScreen extends React.Component {
+class ToDoListView extends React.Component {
   updateTaskState = taskID => {
     this.props.updateTaskCheck(taskID);
   };
@@ -51,60 +47,16 @@ class ToDoListScreen extends React.Component {
 
 const mapStateToProps = state => ({
   tasks: state.toDoTasks,
-  state: state,
 });
 
 const mapDispatchToProps = {
-  addTask,
   updateTaskCheck,
 };
 
-const ToDoListStack = createStackNavigator({
-  MainView: {
-    screen: connect(
-      mapStateToProps,
-      mapDispatchToProps
-    )(ToDoListScreen),
-    navigationOptions: ({ navigation }) => ({
-      title: 'Lista "to do"',
-      headerLeft: (
-        <MaterialIcons name="menu" size={30} style={{ marginLeft: 15 }} onPress={() => navigation.openDrawer()} />
-      ),
-      headerRight: (
-        <MaterialIcons
-          name="add"
-          size={30}
-          style={{ marginRight: 15 }}
-          onPress={() => navigation.navigate('NewTaskView')}
-        />
-      ),
-    }),
-  },
-  NewTaskView: {
-    screen: connect(
-      mapStateToProps,
-      mapDispatchToProps
-    )(NewTaskView),
-    navigationOptions: ({ navigation }) => ({
-      title: 'Nowe zadanie',
-      headerLeft: (
-        <MaterialIcons
-          name="arrow-back"
-          size={30}
-          style={{ marginLeft: 15 }}
-          onPress={() => navigation.navigate('MainView')}
-        />
-      ),
-    }),
-  },
-});
-
-ToDoListStack.navigationOptions = {
-  drawerLabel: 'Lista "to do"',
-  drawerIcon: ({ tintColor }) => <Icon name="check-square" size={24} style={{ color: tintColor }} />,
-};
-
-export default ToDoListStack;
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ToDoListView);
 
 const styles = StyleSheet.create({
   container: {

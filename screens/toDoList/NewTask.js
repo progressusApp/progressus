@@ -2,8 +2,10 @@ import React from 'react';
 import { StyleSheet, Text, View, TextInput, Button, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import DatePicker from 'react-native-datepicker';
 import moment from 'moment';
+import { connect } from 'react-redux';
+import { addTask } from '../../store/actions';
 
-export default class NewTask extends React.Component {
+class NewTaskView extends React.Component {
   state = {
     taskContent: '',
     date: moment()
@@ -64,6 +66,17 @@ export default class NewTask extends React.Component {
     );
   }
 }
+
+const mapStateToProps = state => ({});
+
+const mapDispatchToProps = {
+  addTask,
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(NewTaskView);
 
 const styles = StyleSheet.create({
   container: {
