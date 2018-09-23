@@ -9,6 +9,8 @@ export const ADD_TIMER_RECORD = 'timer/addTimerRecord';
 export const DELETE_TIMER_RECORD = 'timer/deleteTimerRecord';
 export const ADD_NOTE = 'knowlegdeBase/addNote';
 export const DELETE_NOTE = 'knowlegdeBase/deleteNote';
+export const GET_STORAGE_DATA = 'GET_STORAGE_DATA';
+
 import { AsyncStorage } from 'react-native';
 
 const initialState = {
@@ -96,7 +98,7 @@ function updateStorage(state) {
 export default function reducer(state = {}, action) {
   let newState = {};
   switch (action.type) {
-    case 'GET_STORAGE_DATA':
+    case GET_STORAGE_DATA:
       return {
         ...state,
         ...action.payload.data,

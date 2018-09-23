@@ -7,8 +7,9 @@ import NotesView from '../screens/knowledgeBase/NotesView';
 import NewNote from '../screens/knowledgeBase/NewNote';
 import TextNoteView from '../screens/knowledgeBase/TextNote';
 import GraphicNoteView from '../screens/knowledgeBase/GraphicNote';
+import NotePreview from '../screens/knowledgeBase/NotePreview';
 
-const KnowledgeBaseStack = createStackNavigator({
+export const KnowledgeBaseStack = createStackNavigator({
   MainView: {
     screen: KnowledgeBaseView,
     navigationOptions: ({ navigation }) => ({

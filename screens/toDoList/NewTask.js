@@ -54,9 +54,7 @@ class NewTaskView extends React.Component {
                 borderBottomWidth: 1,
               },
             }}
-            onDateChange={date => {
-              this.setState({ date: date });
-            }}
+            onDateChange={date => this.setState({ date: date })}
           />
           <View style={styles.button}>
             <Button onPress={() => this.addTask()} title="Dodaj" />

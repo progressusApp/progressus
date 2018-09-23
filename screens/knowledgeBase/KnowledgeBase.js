@@ -5,7 +5,7 @@ import NotesView from './NotesView';
 import NewNote from './NewNote';
 import TextNote from './TextNote';
 import GraphicNote from './GraphicNote';
-import NotePreview from './NotePreview';
+// import NotePreview from './NotePreview';
 
 class KnowledgeBaseView extends React.Component {
   render() {

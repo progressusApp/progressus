@@ -4,7 +4,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import reducer from './store/reducer';
-import { getDataFromStorage, setDataStorage } from './store/actions';
+import { getDataFromStorage } from './store/actions';
 import { toDoTasks, skillsCategories, timerRecords, notes } from './mockupData.js';
 // import { data } from './dataGenerator';
 import randomWords from 'random-words';

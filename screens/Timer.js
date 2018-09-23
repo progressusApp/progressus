@@ -87,7 +87,7 @@ class TimerView extends React.Component {
     }
     return ActionSheetIOS.showActionSheetWithOptions(
       {
-        options: [...skillsOptions, 'Cancel'],
+        options: [...skillsOptions, 'Anuluj'],
         cancelButtonIndex: skillsOptions.length,
       },
       buttonIndex => {
