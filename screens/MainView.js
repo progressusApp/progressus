@@ -1,12 +1,11 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Image } from 'react-native';
 
 export default class MainView extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>Witaj w aplikacji wspomagającej rozwój umiejętności!</Text>
-        <Text style={styles.instructions}>Skorzystaj z menu aby zobaczyć funkcje.</Text>
+        <Image style={styles.preview} source={require('../assets/main.png')} />
       </View>
     );
   }
@@ -16,8 +15,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    alignItems: 'center',
     justifyContent: 'center',
+    alignItems: 'center',
   },
   welcome: {
     alignSelf: 'center',
@@ -25,13 +24,13 @@ const styles = StyleSheet.create({
     fontSize: 20,
     textAlign: 'center',
   },
-  topBar: {
-    backgroundColor: 'yellow',
-    width: '100%',
-    flexDirection: 'row',
+  textWrapper: {
+    position: 'absolute',
+    top: 200,
   },
-  burgerIcon: {
-    width: 30,
-    height: 30,
+  preview: {
+    flex: 1,
+    // justifyContent: 'flex-end',
+    // alignItems: 'center',
   },
 });
