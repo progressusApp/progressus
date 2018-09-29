@@ -1,18 +1,7 @@
 import React from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  ScrollView,
-  TouchableOpacity,
-  Button,
-  Picker,
-  Platform,
-  ActionSheetIOS,
-} from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Button, Picker, Platform, ActionSheetIOS } from 'react-native';
 import { connect } from 'react-redux';
 import { Stopwatch } from 'react-native-stopwatch-timer';
-import TimerList from './TimerList';
 import { addTimerRecord } from '../store/actions';
 import moment from 'moment';
 

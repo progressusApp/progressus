@@ -5,6 +5,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import EntypoIcons from 'react-native-vector-icons/Entypo';
 import { connect } from 'react-redux';
 import { deleteNote } from '../../store/actions';
+import bubblesort from 'bubblesort';
 
 class NotesView extends React.Component {
   state = {
@@ -28,30 +29,15 @@ class NotesView extends React.Component {
     return 0;
   };
 
-  bubblesort = (arr, cmp) => {
-    cmp = cmp || comparator;
-    var temp;
-    for (var i = 0, l = arr.length; i < l; i++) {
-      for (var j = i; j > 0; j--) {
-        if (cmp(arr[j], arr[j - 1]) < 0) {
-          temp = arr[j];
-          arr[j] = arr[j - 1];
-          arr[j - 1] = temp;
-        }
-      }
-    }
-    return arr;
-  };
-
   sortByTitle = notes => {
-    return this.bubblesort(notes, this.compareTitle);
+    return bubblesort(notes, this.compareTitle);
   };
 
   getCollectionToDisplay = notes => {
     if (this.state.sorted) {
-      console.time('sortByTitle');
+      // console.time('sortByTitle');
       const sortedValues = this.sortByTitle(notes);
-      console.timeEnd('sortByTitle');
+      // console.timeEnd('sortByTitle');
       return sortedValues;
     } else {
       return notes;
@@ -59,14 +45,11 @@ class NotesView extends React.Component {
   };
 
   render() {
-    console.log('notes view');
     const categoryID = this.props.navigation.getParam('categoryID');
     const categoryName = this.props.navigation.getParam('categoryName');
     const notes = this.props.notes.filter(note => note.categoryID === categoryID);
-    const listToDisplay = notes.slice(0, 200);
-    this.getCollectionToDisplay(notes);
-    console.log('listToDisplay ', listToDisplay[0]);
-    console.log('listToDisplay ', listToDisplay.length);
+    const listToDisplay = this.getCollectionToDisplay(notes);
+
     return (
       <View style={styles.container}>
         <View

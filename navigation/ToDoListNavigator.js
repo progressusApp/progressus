@@ -1,4 +1,5 @@
 import React from 'react';
+import { TouchableOpacity } from 'react-native';
 import { createStackNavigator } from 'react-navigation';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import ToDoListView from '../screens/toDoList/ToDoList';
@@ -14,12 +15,9 @@ export const ToDoListStack = createStackNavigator({
         <MaterialIcons name="menu" size={30} style={{ marginLeft: 15 }} onPress={() => navigation.openDrawer()} />
       ),
       headerRight: (
-        <MaterialIcons
-          name="add"
-          size={30}
-          style={{ marginRight: 15 }}
-          onPress={() => navigation.navigate('NewTaskView')}
-        />
+        <TouchableOpacity onPress={() => navigation.navigate('NewTaskView')}>
+          <MaterialIcons name="add" size={30} style={{ marginRight: 15 }} />
+        </TouchableOpacity>
       ),
     }),
   },
@@ -28,12 +26,9 @@ export const ToDoListStack = createStackNavigator({
     navigationOptions: ({ navigation }) => ({
       title: 'Nowe zadanie',
       headerLeft: (
-        <MaterialIcons
-          name="arrow-back"
-          size={30}
-          style={{ marginLeft: 15 }}
-          onPress={() => navigation.navigate('MainView')}
-        />
+        <TouchableOpacity onPress={() => navigation.navigate('MainView')}>
+          <MaterialIcons name="arrow-back" size={30} style={{ marginLeft: 15 }} />
+        </TouchableOpacity>
       ),
     }),
   },

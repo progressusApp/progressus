@@ -7,7 +7,6 @@ import {
   Picker,
   ActionSheetIOS,
   TextInput,
-  Button,
   TouchableOpacity,
   Image,
   TouchableWithoutFeedback,
@@ -23,6 +22,13 @@ class GraphicNoteView extends React.Component {
     categoryName: 'Kliknij by wybrać kategorię',
     noteContent: null,
   };
+
+  componentDidMount() {
+    const { skillsCategories } = this.props;
+    if (skillsCategories) {
+      this.setState({ categoryName: skillsCategories[0].title });
+    }
+  }
 
   savePicture = () => {
     if (this.state.noteContent) {
@@ -153,14 +159,6 @@ const styles = StyleSheet.create({
   label: {
     color: '#64b5f6',
     fontWeight: '900',
-  },
-  button: {
-    flex: 0.33,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 0,
-    borderTopWidth: 0.5,
-    borderColor: '#c1bcbc',
   },
   preview: {
     flex: 1,

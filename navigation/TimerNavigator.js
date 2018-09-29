@@ -1,4 +1,5 @@
 import React from 'react';
+import { TouchableOpacity } from 'react-native';
 import { createStackNavigator, createMaterialTopTabNavigator } from 'react-navigation';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import TimerView from '../screens/Timer';
@@ -30,7 +31,9 @@ export const TimerStack = createStackNavigator({
     navigationOptions: ({ navigation }) => ({
       title: 'Timer',
       headerLeft: (
-        <MaterialIcons name="menu" size={30} style={{ marginLeft: 15 }} onPress={() => navigation.openDrawer()} />
+        <TouchableOpacity onPress={() => navigation.openDrawer()}>
+          <MaterialIcons name="menu" size={30} style={{ marginLeft: 15 }} />
+        </TouchableOpacity>
       ),
     }),
   },

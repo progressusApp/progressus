@@ -21,6 +21,7 @@ class TextNoteView extends React.Component {
     categoryName: 'Kliknij by wybrać kategorię...',
     noteContent: '',
     noteTitle: '',
+    isContentInputFocused: false,
   };
 
   handlePickerChange = categoryName => {
@@ -29,6 +30,7 @@ class TextNoteView extends React.Component {
 
   addNote = () => {
     const category = this.props.skillsCategories.filter(skill => skill.title === this.state.categoryName);
+    console.log('category ', category);
     this.props.addNote(category[0].id, this.state.noteTitle, 'text', this.state.noteContent);
     this.props.navigation.navigate('MainView');
   };
@@ -46,6 +48,13 @@ class TextNoteView extends React.Component {
       }
     );
   };
+
+  componentDidMount() {
+    const { skillsCategories } = this.props;
+    if (skillsCategories) {
+      this.setState({ categoryName: skillsCategories[0].title });
+    }
+  }
 
   renderiOSPicker = () => {
     return (
@@ -77,33 +86,36 @@ class TextNoteView extends React.Component {
   render() {
     const { skillsCategories } = this.props;
     return (
-      // <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View style={styles.container}>
-          <Text style={styles.label}>Treść</Text>
-          <TextInput
-            style={styles.textInput}
-            onChangeText={value => this.setState({ noteContent: value })}
-            value={this.state.noteContent}
-            multiline={true}
-            underlineColorAndroid="transparent"
-            placeholder="Zacznij pisać..."
-          />
-          <Text style={styles.label}>Wybierz kategorię</Text>
-          {this.renderNativePicker()}
-          <Text style={styles.label}>Tytuł notatki</Text>
-          <TextInput
-            style={styles.input}
-            onChangeText={value => this.setState({ noteTitle: value })}
-            value={this.state.noteTitle}
-            placeholder="Tytuł"
-          />
-          <View style={styles.button}>
-            <Button onPress={() => this.addNote()} title="Dodaj" />
-          </View>
+          <KeyboardAvoidingView behavior="position" enabled={!this.state.isContentInputFocused}>
+            <Text style={styles.label}>Treść</Text>
+            <TextInput
+              style={styles.textInput}
+              onChangeText={value => this.setState({ noteContent: value })}
+              value={this.state.noteContent}
+              multiline={true}
+              underlineColorAndroid="transparent"
+              placeholder="Zacznij pisać..."
+              onFocus={() => this.setState({ isContentInputFocused: true })}
+              onBlur={() => this.setState({ isContentInputFocused: false })}
+            />
+            <Text style={styles.label}>Wybierz kategorię</Text>
+            {this.renderNativePicker()}
+
+            <Text style={styles.label}>Tytuł notatki</Text>
+            <TextInput
+              style={styles.input}
+              onChangeText={value => this.setState({ noteTitle: value })}
+              value={this.state.noteTitle}
+              placeholder="Tytuł"
+            />
+            <View style={styles.button}>
+              <Button onPress={() => this.addNote()} title="Dodaj" />
+            </View>
+          </KeyboardAvoidingView>
         </View>
       </TouchableWithoutFeedback>
-      // </KeyboardAvoidingView>
     );
   }
 }

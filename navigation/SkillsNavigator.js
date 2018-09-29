@@ -1,5 +1,6 @@
 import React from 'react';
 import { createStackNavigator } from 'react-navigation';
+import { TouchableOpacity } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import SkillsView from '../screens/Skills';
 
@@ -9,7 +10,9 @@ export const SkillsStack = createStackNavigator({
     navigationOptions: ({ navigation }) => ({
       title: 'Lista umiejętności',
       headerLeft: (
-        <MaterialIcons name="menu" size={30} style={{ marginLeft: 15 }} onPress={() => navigation.openDrawer()} />
+        <TouchableOpacity onPress={() => navigation.openDrawer()}>
+          <MaterialIcons name="menu" size={30} style={{ marginLeft: 15 }} />
+        </TouchableOpacity>
       ),
     }),
   },

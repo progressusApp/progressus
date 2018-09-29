@@ -207,9 +207,6 @@ const styles = StyleSheet.create({
     width: 200,
     padding: 10,
   },
-  deleteButton: {
-    marginBottom: 10,
-  },
   button: {
     alignSelf: 'stretch',
     marginTop: 20,

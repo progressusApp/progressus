@@ -1,11 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
-import NotesView from './NotesView';
-import NewNote from './NewNote';
-import TextNote from './TextNote';
-import GraphicNote from './GraphicNote';
-// import NotePreview from './NotePreview';
 
 class KnowledgeBaseView extends React.Component {
   render() {

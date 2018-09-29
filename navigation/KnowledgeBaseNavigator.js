@@ -1,4 +1,5 @@
 import React from 'react';
+import { TouchableOpacity } from 'react-native';
 import { createStackNavigator } from 'react-navigation';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import EntypoIcons from 'react-native-vector-icons/Entypo';
@@ -15,15 +16,14 @@ export const KnowledgeBaseStack = createStackNavigator({
     navigationOptions: ({ navigation }) => ({
       title: 'Baza wiedzy',
       headerLeft: (
-        <MaterialIcons name="menu" size={30} style={{ marginLeft: 15 }} onPress={() => navigation.openDrawer()} />
+        <TouchableOpacity onPress={() => navigation.openDrawer()}>
+          <MaterialIcons name="menu" size={30} style={{ marginLeft: 15 }} />
+        </TouchableOpacity>
       ),
       headerRight: (
-        <MaterialIcons
-          name="add"
-          size={30}
-          style={{ marginRight: 15 }}
-          onPress={() => navigation.navigate('NewNote')}
-        />
+        <TouchableOpacity onPress={() => navigation.navigate('NewNote')}>
+          <MaterialIcons name="add" size={30} style={{ marginRight: 15 }} />
+        </TouchableOpacity>
       ),
     }),
   },
@@ -32,7 +32,9 @@ export const KnowledgeBaseStack = createStackNavigator({
     navigationOptions: ({ navigation }) => ({
       title: 'Notatki',
       headerLeft: (
-        <MaterialIcons name="arrow-back" size={30} style={{ marginLeft: 15 }} onPress={() => navigation.goBack()} />
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <MaterialIcons name="arrow-back" size={30} style={{ marginLeft: 15 }} />
+        </TouchableOpacity>
       ),
     }),
   },
@@ -41,7 +43,9 @@ export const KnowledgeBaseStack = createStackNavigator({
     navigationOptions: ({ navigation }) => ({
       title: 'Nowa notatka',
       headerLeft: (
-        <MaterialIcons name="arrow-back" size={30} style={{ marginLeft: 15 }} onPress={() => navigation.goBack()} />
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <MaterialIcons name="arrow-back" size={30} style={{ marginLeft: 15 }} />
+        </TouchableOpacity>
       ),
     }),
   },
@@ -50,7 +54,9 @@ export const KnowledgeBaseStack = createStackNavigator({
     navigationOptions: ({ navigation }) => ({
       title: 'Notatka tekstowa',
       headerLeft: (
-        <MaterialIcons name="arrow-back" size={30} style={{ marginLeft: 15 }} onPress={() => navigation.goBack()} />
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <MaterialIcons name="arrow-back" size={30} style={{ marginLeft: 15 }} />
+        </TouchableOpacity>
       ),
     }),
   },
@@ -59,7 +65,9 @@ export const KnowledgeBaseStack = createStackNavigator({
     navigationOptions: ({ navigation }) => ({
       title: 'Notatka graficzna',
       headerLeft: (
-        <MaterialIcons name="arrow-back" size={30} style={{ marginLeft: 15 }} onPress={() => navigation.goBack()} />
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <MaterialIcons name="arrow-back" size={30} style={{ marginLeft: 15 }} />
+        </TouchableOpacity>
       ),
     }),
   },
@@ -69,7 +77,9 @@ export const KnowledgeBaseStack = createStackNavigator({
       return {
         title: 'Podgląd notatki',
         headerLeft: (
-          <MaterialIcons name="arrow-back" size={30} style={{ marginLeft: 15 }} onPress={() => navigation.goBack()} />
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <MaterialIcons name="arrow-back" size={30} style={{ marginLeft: 15 }} />
+          </TouchableOpacity>
         ),
       };
     },

@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, Image } from 'react-native';
 
 class NotePreview extends React.Component {
   renderContent = (content, contentType) => {
@@ -14,8 +14,10 @@ class NotePreview extends React.Component {
     const note = this.props.navigation.getParam('note');
     return (
       <View style={styles.container}>
-        <Text style={styles.header}>{note.title}</Text>
-        {this.renderContent(note.content, note.contentType)}
+        <ScrollView>
+          <Text style={styles.header}>{note.title}</Text>
+          {this.renderContent(note.content, note.contentType)}
+        </ScrollView>
       </View>
     );
   }

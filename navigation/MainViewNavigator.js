@@ -1,4 +1,5 @@
 import React from 'react';
+import { TouchableOpacity } from 'react-native';
 import { createStackNavigator, SafeAreaView } from 'react-navigation';
 import MainView from '../screens/MainView';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -7,9 +8,11 @@ export const MainViewStack = createStackNavigator({
   MainView: {
     screen: MainView,
     navigationOptions: ({ navigation }) => ({
-      title: 'Progress Control App',
+      title: 'Progressus',
       headerLeft: (
-        <MaterialIcons name="menu" size={30} style={{ marginLeft: 15 }} onPress={() => navigation.openDrawer()} />
+        <TouchableOpacity onPress={() => navigation.openDrawer()}>
+          <MaterialIcons name="menu" size={30} style={{ marginLeft: 15 }} />
+        </TouchableOpacity>
       ),
     }),
   },
