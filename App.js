@@ -42,7 +42,6 @@ export default class App extends React.Component {
         store.dispatch(getDataFromStorage({ toDoTasks, skillsCategories, timerRecords, notes }));
       } else {
         let promises = [];
-        AsyncStorage.getItem('@toDoTasks').then(tasks => console.log('seriously I found dataaaa ', tasks));
         promises.push(AsyncStorage.getItem('@toDoTasks'));
         promises.push(AsyncStorage.getItem('@skillsCategories'));
         promises.push(AsyncStorage.getItem('@timerRecords'));
